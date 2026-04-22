@@ -44,7 +44,7 @@
       </li>
       <li class="nav-item" role="presentation">
         <button class="nav-link rounded-pill px-4" id="pills-resep-tab" data-bs-toggle="pill" data-bs-target="#pills-resep" type="button" role="tab">
-          <i class="bi bi-file-earmark-medical"></i>Semua Resep
+          <i class="bi bi-file-earmark-medical"></i>Riwayat Resep
         </button>
       </li>
     </ul>
