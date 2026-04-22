@@ -27,20 +27,57 @@
 
     <form method="POST" action="#">
       @csrf
-      <div class="mb-3">
-        <label for="name" class="form-label fw-semibold text-secondary">Nama Lengkap</label>
-        <input id="name" type="text" class="form-control bg-light border-0 py-2" name="name" required autofocus placeholder="Dr. John Doe / John Doe">
+
+      <div class="col-12">
+        <div class="row">
+
+          <div class="mb-3 col-md-6">
+            <label for="name" class="form-label fw-semibold text-secondary">Nama Lengkap</label>
+            <input id="name" type="text" class="form-control bg-light border-0 py-2" name="name" required autofocus placeholder="Dr. John Doe / John Doe">
+          </div>
+
+          <div class="mb-3 col-md-6">
+            <label for="email" class="form-label fw-semibold text-secondary">Alamat Email</label>
+            <input id="email" type="email" class="form-control bg-light border-0 py-2" name="email" required placeholder="nama@email.com">
+          </div>
+        </div>
+
       </div>
 
-      <div class="mb-3">
-        <label for="email" class="form-label fw-semibold text-secondary">Alamat Email</label>
-        <input id="email" type="email" class="form-control bg-light border-0 py-2" name="email" required placeholder="nama@email.com">
+      <div class="col-12">
+        <div class="row">
+
+          <div class="mb-3 col-md-6">
+            <label for="role" class="form-label fw-semibold text-secondary">Daftar Sebagai</label>
+            <input id="role" type="text" class="form-control bg-light border-0 py-2" name="role" required autofocus value="Pasien" disabled>
+          </div>
+
+          <div class="mb-3 col-md-6">
+            <label for="nik" class="form-label fw-semibold text-secondary">NIK (16 digit)</label>
+            <input id="nik" type="text" class="form-control bg-light border-0 py-2" name="nik" required placeholder="350921xxxxxxxxxx">
+          </div>
+
+        </div>
       </div>
 
-      <div class="mb-3">
-        <label for="role" class="form-label fw-semibold text-secondary">Daftar Sebagai</label>
-        <input id="role" type="text" class="form-control bg-light border-0 py-2" name="role" required autofocus value="Pasien" disabled>
+      <div class="col-12">
+        <div class="row">
+          <div class="mb-3 col-md-6">
+            <label class="form-label fw-semibold text-secondary">Jenis Kelamin</label>
+            <select name="jenis_kelamin" class="form-select border-0 bg-light py-2 fw-medium @error('jenis_kelamin') is-invalid @enderror">
+              <option value="" selected disabled>Pilih Jenis Kelamin</option>
+              <option value="Laki-laki">Laki-laki</option>
+              <option value="Perempuan">Perempuan</option>
+            </select>
+          </div>
+
+          <div class="mb-3 col-md-6">
+            <label for="tanggal_lahir" class="form-label fw-semibold text-secondary">Tanggal Lahir</label>
+            <input id="tanggal_lahir" type="date" class="form-control bg-light border-0 py-2" name="tanggal_lahir" required placeholder="Minimal 8 karakter">
+          </div>
+        </div>
       </div>
+
 
       <div class="mb-3">
         <label for="password" class="form-label fw-semibold text-secondary">Kata Sandi</label>
