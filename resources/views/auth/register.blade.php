@@ -54,7 +54,7 @@
 
           <div class="mb-3 col-md-6">
             <label for="nik" class="form-label fw-semibold text-secondary">NIK (16 digit)</label>
-            <input id="nik" type="text" class="form-control bg-light border-0 py-2" name="nik" required placeholder="350921xxxxxxxxxx">
+            <input id="nik" type="text" class="form-control bg-light border-0 py-2" name="nik" required placeholder="35092xxxxxxxxxxx">
           </div>
 
         </div>
