@@ -38,67 +38,50 @@
         <div class="card-body p-4 p-md-5">
           <h6 class="fw-bold mb-4">Item Obat yang Harus Disiapkan</h6>
 
-          <form action="{{ url('/permintaan-resep/1/konfirmasi') }}" method="POST">
+          <form action="{{ route('permintaan-resep.update', $resep->id) }}" method="POST">
             @csrf
             @method('PUT')
 
-            <div class="table-responsive">
-              <table class="table align-middle">
-                <thead class="bg-light small text-muted">
-                  <tr>
-                    <th class="border-0 ps-3">Nama Obat</th>
-                    <th class="border-0 text-center">Jumlah</th>
-                    <th class="border-0">Aturan Pakai</th>
-                    <th class="border-0 text-end pe-3">Check</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="ps-3">
-                      <div class="fw-bold">Amoxicillin 500mg</div>
-                      <small class="text-muted">Stok tersedia: 48</small>
-                    </td>
-                    <td class="text-center fw-bold">15 Tab</td>
-                    <td class="small fst-italic">3 x 1 Hari (Habiskan)</td>
-                    <td class="text-end pe-3">
-                      <input class="form-check-input border-primary shadow-none cursor-pointer" type="checkbox" style="width: 20px; height: 20px;" required>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="ps-3">
-                      <div class="fw-bold">Paracetamol 500mg</div>
-                      <small class="text-muted">Stok tersedia: 95</small>
-                    </td>
-                    <td class="text-center fw-bold">10 Tab</td>
-                    <td class="small fst-italic">3 x 1 Hari (Bila Demam)</td>
-                    <td class="text-end pe-3">
-                      <input class="form-check-input border-primary shadow-none cursor-pointer" type="checkbox" style="width: 20px; height: 20px;" required>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+            <div class="mb-4">
+              <label class="form-label small fw-bold text-muted">Instruksi Obat dari Dokter</label>
+              <div class="p-3 bg-primary bg-opacity-10 border border-primary border-opacity-25 rounded-3">
+                @if($resep->obat)
+                <h6 class="fw-bold text-primary mb-1"><i class="bi bi-capsule me-2"></i>{{ $resep->obat->nama_obat }}</h6>
+                <div class="d-flex justify-content-between align-items-center mt-2 small">
+                  <span class="text-muted">Kategori: {{ $resep->obat->kategori }}</span>
+                  <span class="badge {{ $resep->obat->stok > 0 ? 'bg-success' : 'bg-danger' }}">
+                    Sisa Stok di Apotek: {{ $resep->obat->stok }} {{ $resep->obat->satuan }}
+                  </span>
+                </div>
+                @else
+                <div class="text-danger small"><i class="bi bi-exclamation-triangle me-1"></i> Dokter belum memasukkan data obat!</div>
+                @endif
+              </div>
             </div>
 
-            <div class="mt-4 pt-4 border-top">
-              <div class="row g-3 justify-content-between">
-                <div class="col-md-3">
-                  <a href="{{ url('/permintaan-resep') }}" class="btn btn-outline-secondary w-100 rounded-pill py-2">
-                    Batal
-                  </a>
-                </div>
-                <div class="col-md-9 d-flex gap-2 justify-content-end">
-                  <button type="button" class="btn btn-outline-danger rounded-pill py-2 px-4">
-                    Tolak Resep
-                  </button>
-                  <button type="submit" class="btn btn-primary rounded-pill py-2 px-4 fw-bold shadow-sm">
-                    Konfirmasi Penyerahan
-                  </button>
-                </div>
-              </div>
-              <p class="text-end small fst-italic text-muted mt-3 mb-0">
-                *Menekan konfirmasi akan otomatis mengurangi stok gudang.
-              </p>
+            <div class="mb-4">
+              <label class="form-label small fw-bold text-muted">Perbarui Status Antrean <span class="text-danger">*</span></label>
+              <select name="status" class="form-select bg-light border-0 py-2 shadow-none" required {{ $resep->status === 'Selesai' ? 'disabled' : '' }}>
+                <option value="Menunggu" {{ $resep->status === 'Menunggu' ? 'selected' : '' }}>Menunggu (Baru Masuk)</option>
+                <option value="Disiapkan" {{ $resep->status === 'Disiapkan' ? 'selected' : '' }}>Disiapkan (Menunggu Diambil Pasien)</option>
+                <option value="Selesai" {{ $resep->status === 'Selesai' ? 'selected' : '' }}>Selesai (Sudah Diserahkan)</option>
+              </select>
             </div>
+
+            @if($resep->status !== 'Selesai')
+            <div class="alert alert-warning bg-warning bg-opacity-10 border-0 small text-warning rounded-3 mt-3">
+              <i class="bi bi-info-circle-fill me-1"></i> Mengubah status menjadi <strong>Selesai</strong> akan memotong stok secara otomatis.
+            </div>
+            <button type="submit" class="btn btn-primary w-100 rounded-pill fw-bold py-2 shadow-sm" {{ (!$resep->obat || $resep->obat->stok < 1) ? 'disabled' : '' }}>
+              <i class="bi bi-save me-2"></i>Simpan Perubahan
+            </button>
+            @else
+            <div class="alert alert-success bg-success bg-opacity-10 border-0 small text-success rounded-3 text-center">
+              <i class="bi bi-check-circle-fill d-block fs-3 mb-2"></i>
+              Resep diserahkan dan stok obat telah dipotong.
+            </div>
+            @endif
+
           </form>
 
         </div>

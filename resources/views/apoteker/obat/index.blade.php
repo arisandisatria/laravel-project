@@ -38,7 +38,7 @@
             </div>
             <div class="col-md-4">
               <select name="kategori" class="form-select border-0 bg-light rounded-3 shadow-none small">
-                <option value="all" {{ request('kategori') == 'all' ? 'selected' : '' }}>Semua Kategori</option>
+                <option value="Semua Kategori" {{ request('kategori') == 'Semua Kategori' ? 'selected' : '' }}>Semua Kategori</option>
                 <option value="Antibiotik" {{ request('kategori') == 'Antibiotik' ? 'selected' : '' }}>Antibiotik</option>
                 <option value="Vitamin" {{ request('kategori') == 'Vitamin' ? 'selected' : '' }}>Vitamin</option>
                 <option value="Analgetik" {{ request('kategori') == 'Analgetik' ? 'selected' : '' }}>Analgetik</option>
@@ -49,11 +49,6 @@
               <button type="submit" class="btn btn-dark w-100 rounded-3">Cari</button>
             </div>
 
-            @if(request('search') || (request('kategori') && request('kategori') != 'all'))
-            <a href="{{ route('stok-obat.index') }}" class="btn btn-outline-danger px-3 rounded-3" title="Hapus Filter">
-              <i class="bi bi-x-lg"></i>
-            </a>
-            @endif
           </form>
         </div>
       </div>
@@ -92,9 +87,9 @@
             <th class="ps-4 py-3 border-0 text-muted small text-uppercase">Kode</th>
             <th class="border-0 text-muted small text-uppercase">Nama Obat</th>
             <th class="border-0 text-muted small text-uppercase">Kategori</th>
-            <th class="border-0 text-muted small text-uppercase text-center">Stok</th>
-            <th class="border-0 text-muted small text-uppercase text-center">Expired Date</th>
-            <th class="border-0 text-muted small text-uppercase text-end">Harga Satuan</th>
+            <th class="border-0 text-muted small text-uppercase text-start">Stok</th>
+            <th class="border-0 text-muted small text-uppercase text-start">Expired Date</th>
+            <th class="border-0 text-muted small text-uppercase text-start">Harga Satuan</th>
             <th class="border-0 text-muted small text-uppercase text-center">Aksi</th>
           </tr>
         </thead>
@@ -110,10 +105,10 @@
                 @endif
             </td>
             <td><span class="badge bg-secondary bg-opacity-10 text-secondary px-3 rounded-pill">{{ $item->kategori }}</span></td>
-            <td class="text-center">
+            <td class="text-start">
               <span class="fw-bold @if($item->stok < 20) text-danger @endif">{{ $item->stok }}</span>
             </td>
-            <td class="text-center">
+            <td class="text-start">
               @if($item->tanggal_expired)
               <span class="small fw-medium {{ $item->tanggal_expired->isPast() ? 'text-danger fw-bold' : 'text-dark' }}">
                 {{ $item->tanggal_expired->format('d M Y') }}
@@ -125,7 +120,7 @@
               <span class="text-muted fst-italic">-</span>
               @endif
             </td>
-            <td class="text-end">Rp {{ $item->harga }}</td>
+            <td class="text-start">Rp {{ $item->harga }}</td>
             <td class="text-center">
               <div class="d-flex justify-content-center gap-2">
                 <a href="{{ route('stok-obat.edit', $item->id) }}" class="btn btn-sm btn-light rounded-circle shadow-sm border" title="Edit Data Obat"><i class="bi bi-pencil-square text-warning"></i></a>

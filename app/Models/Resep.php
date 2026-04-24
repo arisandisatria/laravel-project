@@ -12,20 +12,23 @@ class Resep extends Model
 
     protected $table = 'reseps';
 
-    protected $fillable = ['rekam_medis_id', 'apoteker_id', 'status'];
+    protected $fillable = ['rekam_medis_id', 'apoteker_id', 'obat_id', 'status', 'urgensi', 'kode_resep'];
 
     public function rekamMedis()
     {
         return $this->belongsTo(RekamMedis::class, 'rekam_medis_id');
     }
+    public function obat()
+    {
+        return $this->belongsTo(Obat::class, 'obat_id');
+    }
     public function pasien()
     {
-        return $this->hasOneThrough(Pasien::class, RekamMedis::class, 'id', 'id', 'rekam_medis_id', 'pasien_id');
+       return $this->belongsTo(Pasien::class);
     }
 
-    // (Opsional) Shortcut untuk mengambil Dokter
-    // public function dokter()
-    // {
-    //     return $this->hasOneThrough(Dokter::class, RekamMedis::class, 'id', 'id', 'rekam_medis_id', 'dokter_id');
-    // }
+    public function dokter()
+    {
+        return $this->belongsTo(Dokter::class);
+    }
 }

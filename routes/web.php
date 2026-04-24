@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ResepController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -87,7 +88,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get("/apoteker", [\App\Http\Controllers\ApotekerController::class, 'index'])->name("apoteker.dashboard");
 
         // OBAT
-       Route::resource('stok-obat', \App\Http\Controllers\ObatController::class);
+        Route::resource('stok-obat', \App\Http\Controllers\ObatController::class);
 
         // RESEP
         Route::get('/permintaan-resep', [\App\Http\Controllers\ResepController::class, 'index'])->name('permintaan-resep.index');
@@ -96,11 +97,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return view("apoteker.resep.riwayat");
         });
 
-        Route::get("/permintaan-resep/proses/1", function() {
-            return view("apoteker.resep.proses");
-        });
+        Route::get('/permintaan-resep/proses/{id}', [\App\Http\Controllers\ResepController::class, 'proses'])->name('permintaan-resep.proses');
 
-
+        Route::put('/permintaan-resep/proses/{id}', [\App\Http\Controllers\ResepController::class, 'updateStatus'])->name('permintaan-resep.update');
     });
 
     // ADMIN

@@ -12,8 +12,11 @@ class ObatController extends Controller
         $query = Obat::latest();
 
         if ($request->filled('search')) {
-            $query->where('nama_obat', 'like', '%' . $request->search . '%')
-                  ->orWhere('kode_obat', 'like', '%' . $request->search . '%');
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('nama_obat', 'like', "%{$search}%")
+                ->orWhere('kode_obat', 'like', "%{$search}%");
+            });
         }
 
         if ($request->filled('kategori') && $request->kategori !== 'Semua Kategori') {

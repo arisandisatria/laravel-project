@@ -84,7 +84,7 @@
   <div class="nav flex-column mt-3">
     <small class="text-uppercase text-muted fw-bold px-4 mb-2" style="font-size: 0.7rem;">Menu Utama</small>
 
-    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard', 'apoteker.dashboard') ? 'active' : '' }}">
+    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard', 'apoteker.dashboard', 'dokter.dashboard') ? 'active' : '' }}">
       <i class="bi bi-speedometer2"></i> Dashboard
     </a>
 

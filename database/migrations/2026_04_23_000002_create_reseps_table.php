@@ -14,8 +14,11 @@ return new class extends Migration
         Schema::create('reseps', function (Blueprint $table) {
             $table->id();
             $table->foreignId('rekam_medis_id')->constrained('rekam_medis')->cascadeOnDelete();
-            $table->foreignId('apoteker_id')->nullable()->constrained('users'); // Diisi saat dikonfirmasi
+            $table->foreignId('obat_id')->nullable()->constrained('obats')->onDelete('cascade');
+            $table->foreignId('apoteker_id')->nullable()->constrained('users')->onDelete('set null');
             $table->enum('status', ['Menunggu', 'Disiapkan', 'Selesai'])->default('Menunggu');
+            $table->enum('urgensi', ['Normal', "Semua Urgensi", "Segera (Cito)"])->default('Normal');
+            $table->string('kode_resep');
             $table->timestamps();
         });
     }

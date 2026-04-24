@@ -3,30 +3,39 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Resep;
+use App\Models\Obat;
+use Carbon\Carbon;
 
 class ApotekerController extends Controller
 {
     public function index()
     {
-        // TODO: Nanti ini akan diganti dengan query asli dari database (Model Obat & Resep)
-        // Contoh query asli nanti: $resepBaru = Resep::where('status', 'baru')->count();
+        // 1. Statistik Resep
+        // Menghitung resep yang masih aktif (belum selesai)
+        $resepBaru = Resep::whereIn('status', ['Menunggu', 'Diproses', 'Disiapkan'])->count();
 
-        // Data statis sementara untuk menghidupkan UI dasbor
-        $resepBaru = 5;
-        $resepSelesai = 3;
-        $stokKritisCount = 4;
-        $totalObat = 124;
+        // Menghitung resep yang selesai KHUSUS hari ini (agar angka dashboard lebih realistis)
+        $resepSelesai = Resep::where('status', 'Selesai')
+                             ->whereDate('updated_at', Carbon::today())
+                             ->count();
 
-        // Data dummy untuk tabel antrean
-        $antreanResep = [
-            (object)['id_resep' => '#RSP-101', 'nama_pasien' => 'Andi Wijaya', 'nama_dokter' => 'dr. Andi Hermawan'],
-            (object)['id_resep' => '#RSP-102', 'nama_pasien' => 'Budi Santoso', 'nama_dokter' => 'dr. Andi Hermawan'],
-        ];
+        // 2. Statistik Inventaris Obat (Batas kritis stok < 10 sesuai aturanmu sebelumnya)
+        $stokKritisCount = Obat::where('stok', '<', 10)->count();
+        $totalObat = Obat::count();
 
-        // Data dummy untuk peringatan stok
-        $peringatanStok = [
-            (object)['nama_obat' => 'Paracetamol 500mg', 'sisa' => 2, 'satuan' => 'kotak']
-        ];
+        // 3. Data Antrean Resep (Ambil 5 resep terbaru yang belum selesai beserta nama pasien & dokter)
+        $antreanResep = Resep::with(['rekamMedis.pasien.user', 'rekamMedis.dokter.user'])
+                             ->whereIn('status', ['Menunggu', 'Diproses', 'Disiapkan'])
+                             ->orderBy('created_at', 'asc')
+                             ->take(5)
+                             ->get();
+
+        // 4. Data Peringatan Stok (Ambil 5 obat dengan stok paling sedikit)
+        $peringatanStok = Obat::where('stok', '<', 10)
+                              ->orderBy('stok', 'asc')
+                              ->take(5)
+                              ->get();
 
         return view('apoteker.index', compact(
             'resepBaru',

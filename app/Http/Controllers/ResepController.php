@@ -4,15 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Resep;
 use Illuminate\Http\Request;
+use App\Models\Obat;
+use Illuminate\Support\Facades\Auth;
 
 class ResepController extends Controller
 {
     public function index(Request $request)
     {
-        // 1. Inisiasi Query dasar dengan memuat relasi (Eager Loading agar cepat)
+
         $query = Resep::with(['rekamMedis.pasien.user', 'rekamMedis.dokter.user'])->latest();
 
-        // 2. Fitur Pencarian (berdasarkan Kode Resep atau Nama Pasien)
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -23,26 +24,55 @@ class ResepController extends Controller
             });
         }
 
-        // 3. (Opsional) Fitur Filter Urgensi jika ada di databasemu
-        // if ($request->filled('urgensi') && $request->urgensi !== 'Semua Urgensi') {
-        //     $query->where('urgensi', $request->urgensi);
-        // }
+        if ($request->filled('urgensi') && $request->urgensi !== 'Semua Urgensi') {
+            $query->where('urgensi', $request->urgensi);
+        }
 
-        // 4. Pisahkan Data Berdasarkan Tab (Menggunakan parameter URL ?tab=selesai)
-        $tab = $request->get('tab', 'aktif'); // Default ke tab 'aktif'
+        $tab = $request->get('tab', 'aktif');
 
         if ($tab === 'selesai') {
-            // Ambil resep yang sudah selesai
             $query->where('status', 'Selesai');
         } else {
-            // Ambil resep yang sedang antre atau diproses
             $query->whereIn('status', ['Menunggu', 'Diproses', 'Disiapkan']);
         }
 
-        // 5. Eksekusi Query dan Hitung Total Antrean Aktif
-        $resep = $query->paginate(10)->withQueryString();
+        $reseps = $query->paginate(10)->withQueryString();
         $totalAntrean = Resep::whereIn('status', ['Menunggu', 'Diproses', 'Disiapkan'])->count();
 
-        return view('apoteker.resep.index', compact('resep', 'totalAntrean', 'tab'));
+        return view('apoteker.resep.index', compact('reseps', 'totalAntrean', 'tab'));
+    }
+
+    public function proses($id)
+    {
+        $resep = Resep::with(['rekamMedis.pasien.user', 'rekamMedis.dokter.user', 'obat'])->findOrFail($id);
+
+        return view('apoteker.resep.proses', compact('resep'));
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $resep = Resep::findOrFail($id);
+
+        $request->validate([
+            'status'  => 'required|in:Menunggu,Diproses,Disiapkan,Selesai',
+        ]);
+
+
+        $obatDiresepkan = $resep->obat;
+
+
+        if ($request->status === 'Selesai' && $resep->status !== 'Selesai') {
+            if (!$obatDiresepkan || $obatDiresepkan->stok < 1) {
+                return back()->with('error', 'Gagal memproses! Stok obat tidak mencukupi untuk resep ini.');
+            }
+            $obatDiresepkan->decrement('stok', 1);
+        }
+
+        $resep->update([
+            'status' => $request->status,
+            'apoteker_id' => Auth::id(),
+        ]);
+
+        return redirect()->route('permintaan-resep.index')->with('success', 'Status resep berhasil diperbarui!');
     }
 }

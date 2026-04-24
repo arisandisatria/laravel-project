@@ -36,7 +36,7 @@
             <i class="bi bi-receipt fs-4"></i>
           </div>
           <h6 class="text-muted fw-semibold mb-1 small">Resep Masuk</h6>
-          <h3 class="fw-bold mb-0 text-dark">5 <span class="fs-6 text-muted fw-normal">Baru</span></h3>
+          <h3 class="fw-bold mb-0 text-dark">{{ $resepBaru }} <span class="fs-6 text-muted fw-normal">Baru</span></h3>
         </div>
       </div>
     </div>
@@ -48,7 +48,7 @@
             <i class="bi bi-bag-check fs-4"></i>
           </div>
           <h6 class="text-muted fw-semibold mb-1 small">Siap Diambil</h6>
-          <h3 class="fw-bold mb-0 text-dark">3 <span class="fs-6 text-muted fw-normal">Selesai</span></h3>
+          <h3 class="fw-bold mb-0 text-dark">{{ $resepSelesai }} <span class="fs-6 text-muted fw-normal">Selesai</span></h3>
         </div>
       </div>
     </div>
@@ -60,7 +60,7 @@
             <i class="bi bi-exclamation-octagon fs-4"></i>
           </div>
           <h6 class="text-muted fw-semibold mb-1 small">Stok Kritis</h6>
-          <h3 class="fw-bold mb-0 text-dark">4 <span class="fs-6 text-muted fw-normal">Item</span></h3>
+          <h3 class="fw-bold mb-0 text-dark">{{ $stokKritisCount }} <span class="fs-6 text-muted fw-normal">Item</span></h3>
         </div>
       </div>
     </div>
@@ -72,7 +72,7 @@
             <i class="bi bi-box-seam fs-4"></i>
           </div>
           <h6 class="text-muted fw-semibold mb-1 small">Total Master Obat</h6>
-          <h3 class="fw-bold mb-0 text-dark">124 <span class="fs-6 text-muted fw-normal">Item</span></h3>
+          <h3 class="fw-bold mb-0 text-dark">{{ $totalObat }} <span class="fs-6 text-muted fw-normal">Item</span></h3>
         </div>
       </div>
     </div>
@@ -96,11 +96,11 @@
                 </tr>
               </thead>
               <tbody>
-                @forelse ($antreanResep as $resep)
+                @forelse ($antreanResep as $item)
                 <tr>
-                  <td class="text-primary fw-bold">{{ $resep->id_resep }}</td>
-                  <td>{{ $resep->nama_pasien }}</td>
-                  <td class="text-muted">{{ $resep->nama_dokter }}</td>
+                  <td class="text-primary fw-bold">{{ $item->kode_resep }}</td>
+                  <td>{{ $item->rekamMedis->pasien->user->name }}</td>
+                  <td class="text-muted">{{ $item->rekamMedis->dokter->user->name }}</td>
                 </tr>
                 @empty
                 <tr>
@@ -144,7 +144,7 @@
             <h6 class="fw-bold text-dark mb-3">Peringatan Stok</h6>
             <div class="alert alert-danger border-0 shadow-sm rounded-4 small mb-0">
               <i class="bi bi-exclamation-triangle-fill me-2"></i>
-              {{ $stok->nama_obat }} sisa <strong>{{ $stok->sisa }} {{ $stok->satuan }}</strong>. Segera buat pesanan baru.
+              {{ $stok->nama_obat }} sisa <strong>{{ $stok->stok }} {{ $stok->satuan }}</strong>. Segera buat pesanan baru.
             </div>
             @empty
             <div class="alert alert-success mb-0 py-2 small border-0">

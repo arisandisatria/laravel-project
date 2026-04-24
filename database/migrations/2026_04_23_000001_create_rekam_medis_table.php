@@ -13,8 +13,8 @@ return new class extends Migration
 {
     Schema::create('rekam_medis', function (Blueprint $table) {
         $table->id();
-        $table->foreignId('pasien_id')->constrained('pasiens')->cascadeOnDelete();
-        $table->foreignId('dokter_id')->constrained('users');
+        $table->foreignId('pasien_id')->constrained('pasiens')->onDelete('cascade');
+        $table->foreignId('dokter_id')->constrained('dokters')->onDelete('cascade');
         $table->text('keluhan_utama');
         $table->text('riwayat_penyakit')->nullable();
         $table->string('tensi')->nullable();

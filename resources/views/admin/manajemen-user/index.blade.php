@@ -48,11 +48,6 @@
           <button type="submit" class="btn btn-dark w-100 rounded-3">Cari</button>
         </div>
 
-        @if(request('search') || (request('role') && request('role') != 'all'))
-        <a href="{{ route('manajemen-user.index') }}" class="btn btn-outline-danger px-3 rounded-3" title="Hapus Filter">
-          <i class="bi bi-x-lg"></i>
-        </a>
-        @endif
       </form>
     </div>
   </div>
