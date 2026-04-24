@@ -36,7 +36,7 @@
             <i class="bi bi-people fs-4"></i>
           </div>
           <h6 class="text-muted fw-semibold mb-1 small">Pasien Saya</h6>
-          <h3 class="fw-bold mb-0 text-dark">42 <span class="fs-6 text-muted fw-normal">Orang</span></h3>
+          <h3 class="fw-bold mb-0 text-dark">{{ $totalPasien }} <span class="fs-6 text-muted fw-normal">Orang</span></h3>
         </div>
       </div>
     </div>
@@ -48,7 +48,7 @@
             <i class="bi bi-file-earmark-medical fs-4"></i>
           </div>
           <h6 class="text-muted fw-semibold mb-1 small">Resep Diterbitkan</h6>
-          <h3 class="fw-bold mb-0 text-dark">8 <span class="fs-6 text-muted fw-normal">Resep</span></h3>
+          <h3 class="fw-bold mb-0 text-dark">{{ $resepDiterbitkan }} <span class="fs-6 text-muted fw-normal">Resep</span></h3>
         </div>
       </div>
     </div>
@@ -60,7 +60,7 @@
             <i class="bi bi-hourglass-split fs-4"></i>
           </div>
           <h6 class="text-muted fw-semibold mb-1 small">Antrean Menunggu</h6>
-          <h3 class="fw-bold mb-0 text-dark">3 <span class="fs-6 text-muted fw-normal">Sisa</span></h3>
+          <h3 class="fw-bold mb-0 text-dark">{{ $antreanMenunggu }} <span class="fs-6 text-muted fw-normal">Sisa</span></h3>
         </div>
       </div>
     </div>
@@ -72,7 +72,7 @@
             <i class="bi bi-info-circle fs-4"></i>
           </div>
           <h6 class="text-muted fw-semibold mb-1 small">Obat Kosong</h6>
-          <h3 class="fw-bold mb-0 text-dark">2 <span class="fs-6 text-muted fw-normal">Item</span></h3>
+          <h3 class="fw-bold mb-0 text-dark">{{ $obatKosong }} <span class="fs-6 text-muted fw-normal">Item</span></h3>
         </div>
       </div>
     </div>
@@ -98,22 +98,24 @@
                 </tr>
               </thead>
               <tbody>
+                @forelse ($resepTerbaru as $resep)
+
+                @empty
                 <tr>
-                  <td class="fw-semibold text-primary">#RSP-101</td>
-                  <td>Andi Wijaya</td>
-                  <td class="text-muted small">09:30 AM</td>
-                  <td><span class="badge bg-warning text-dark bg-opacity-25 rounded-pill px-3">Proses Apotek</span></td>
-                  <td class="text-end">
-                    <button class="btn btn-sm btn-light border-0" data-bs-toggle="modal" data-bs-target="#modalLihatResep">
-                      <i class="bi bi-eye"></i>
-                    </button>
-                  </td>
+                  <td colspan="5" class="text-center text-muted py-4">Belum ada resep yang diterbitkan.</td>
                 </tr>
+                @endforelse
                 <tr>
-                  <td class="fw-semibold text-primary">#RSP-100</td>
-                  <td>Lani Marlina</td>
-                  <td class="text-muted small">08:15 AM</td>
-                  <td><span class="badge bg-success bg-opacity-25 text-success rounded-pill px-3">Selesai</span></td>
+                  <td class="fw-semibold text-primary">{{ $resep->kode_resep }}</td>
+                  <td>{{ $resep->rekamMedis->pasien->user_name ?? 'Data Pasien Hilang' }}</td>
+                  <td class="text-muted small">{{ $resep->created_at->format('h:i A') }}</td>
+                  <td>
+                    @if($resep->status === 'Selesai')
+                    <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">Selesai</span>
+                    @else
+                    <span class="badge bg-warning bg-opacity-10 text-warning rounded-pill px-3">{{ $resep->status }}</span>
+                    @endif
+                  </td>
                   <td class="text-end">
                     <button class="btn btn-sm btn-light border-0" data-bs-toggle="modal" data-bs-target="#modalLihatResep">
                       <i class="bi bi-eye"></i>
@@ -154,12 +156,24 @@
           <hr class="my-4 text-muted">
 
           <h6 class="fw-bold text-dark mb-3">Info Ketersediaan Obat</h6>
-          <div class="alert alert-info bg-opacity-10 border-0 border-start border-info shadow-sm" role="alert">
+          <div class="bg-info bg-opacity-10 p-3 rounded-3 mt-3">
+            @forelse($obatKritis as $obat)
+            <div class="small text-dark mb-2">
+              <i class="bi bi-info-circle-fill text-info me-1"></i>
+              Stok <strong>{{ $obat->nama_obat }}</strong> tersisa {{ $obat->stok }} {{ $obat->satuan }}.
+            </div>
+            @empty
+            <div class="small text-muted">
+              <i class="bi bi-check-circle-fill text-success me-1"></i> Semua stok obat aman.
+            </div>
+            @endforelse
+          </div>
+          {{-- <div class="alert alert-info bg-opacity-10 border-0 border-start border-info shadow-sm" role="alert">
             <div class="small">
               <i class="bi bi-info-circle-fill me-1"></i>
               <strong>Info:</strong> Stok <strong>Amoxicillin</strong> hampir habis. Mohon tanyakan ketersediaan ke apotek sebelum meresepkan.
             </div>
-          </div>
+          </div> --}}
         </div>
       </div>
     </div>

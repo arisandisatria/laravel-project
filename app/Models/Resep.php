@@ -12,7 +12,7 @@ class Resep extends Model
 
     protected $table = 'reseps';
 
-    protected $fillable = ['rekam_medis_id', 'apoteker_id', 'obat_id', 'status', 'urgensi', 'kode_resep'];
+    protected $fillable = ['rekam_medis_id', 'apoteker_id', 'obat_id', 'status', 'urgensi', 'kode_resep','jumlah', 'aturan'];
 
     public function rekamMedis()
     {

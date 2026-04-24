@@ -8,11 +8,11 @@
           <div class="row align-items-center">
             <div class="col-md-8">
               <small class="text-white text-uppercase" style="letter-spacing: 1px;">Data Pasien</small>
-              <h4 class="fw-bold mb-1 mt-1">Budi Santoso</h4>
+              <h4 class="fw-bold mb-1 mt-1">{{ $pasien->user->name }}</h4>
               <p class="mb-0 text-white small">
-                <i class="bi bi-fingerprint me-1"></i> ID: PAS-001 &nbsp; • &nbsp;
-                <i class="bi bi-gender-male me-1"></i> Laki-laki &nbsp; • &nbsp;
-                <i class="bi bi-calendar3 me-1"></i> 45 Tahun
+                <i class="bi bi-fingerprint me-1"></i> ID: PAS-{{ str_pad($pasien->id, 3, '0', STR_PAD_LEFT) }} &nbsp; • &nbsp;
+                <i class="bi bi-gender-male me-1"></i> {{ $pasien->jenis_kelamin }} &nbsp; • &nbsp;
+                <i class="bi bi-calendar3 me-1"></i> {{ \Carbon\Carbon::parse($pasien->tanggal_lahir)->age }} Tahun
               </p>
             </div>
             <div class="col-md-4 text-md-end mt-3 mt-md-0 d-none d-md-block opacity-50">
@@ -24,13 +24,10 @@
 
       <div class="card border-0 shadow-sm rounded-4">
         <div class="card-body p-4 p-md-5">
-          <form action="{{ url('/manajemen-pasien') }}" method="POST">
+          <form action="{{ route('dokter.rekam-medis.simpan-pemeriksaan', $pasien->id) }}" method="POST">
             @csrf
 
-            <input type="hidden" name="id_pasien" value="PAS-001">
-
             <div class="row g-4 align-items-start">
-
               <div class="col-md-6">
                 <h6 class="fw-bold mb-3 border-bottom pb-2 text-primary">Anamnesis (Wawancara Medis)</h6>
 

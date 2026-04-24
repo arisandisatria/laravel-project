@@ -5,7 +5,7 @@
     <p class="text-muted small mb-0">Input diagnosa dan instruksi obat untuk pasien.</p>
   </div>
 
-  <form action="{{ url('/kelola-resep') }}" method="POST">
+  <form action="{{ route('dokter.resep.store') }}" method="POST">
     @csrf
 
     <div class="row g-4 align-items-start">
@@ -19,8 +19,9 @@
               <label class="form-label small fw-bold">Pilih Pasien</label>
               <select class="form-select border-0 bg-light rounded-3" name="id_pasien" required>
                 <option value="">-- Cari Pasien --</option>
-                <option value="1">PAS-001 - Budi Santoso</option>
-                <option value="2">PAS-002 - Siti Aminah</option>
+                @foreach($pasiens as $pasien)
+                <option value="{{ $pasien->id }}">PAS-{{ str_pad($pasien->id, 3, '0', STR_PAD_LEFT) }} - {{ $pasien->user->name }}</option>
+                @endforeach
               </select>
             </div>
 
@@ -54,8 +55,9 @@
                     <label class="small text-muted">Pilih Obat</label>
                     <select class="form-select form-select-sm border-0 bg-light" name="obat[]" required>
                       <option value="">-- Pilih --</option>
-                      <option value="1">Amoxicillin 500mg (Stok: 50)</option>
-                      <option value="2">Paracetamol 500mg (Stok: 100)</option>
+                      @foreach($obats as $obat)
+                      <option value="{{ $obat->id }}">{{ $obat->nama_obat }} (Stok: {{ $obat->stok }})</option>
+                      @endforeach
                     </select>
                   </div>
                   <div class="col-4">
@@ -91,36 +93,41 @@
   </form>
 
   <script>
+    // Simpan daftar obat dari database ke dalam format HTML text
+    const pilihanObat = `
+      <option value="">-- Pilih --</option>
+      @foreach($obats as $obat)
+        <option value="{{ $obat->id }}">{{ $obat->nama_obat }} (Stok: {{ $obat->stok }})</option>
+      @endforeach
+    `;
+
     document.getElementById('add-obat').addEventListener('click', function() {
       const wrapper = document.getElementById('wrapper-obat');
       const newField = document.createElement('div');
       newField.classList.add('item-obat', 'border-bottom', 'pb-3', 'mb-3');
 
       newField.innerHTML = `
-                <div class="row g-2">
-                    <div class="col-11">
-                        <label class="small text-muted">Pilih Obat</label>
-                        <select class="form-select form-select-sm border-0 bg-light" name="obat[]" required>
-                            <option value="">-- Pilih --</option>
-                            <option value="1">Amoxicillin 500mg (Stok: 50)</option>
-                            <option value="2">Paracetamol 500mg (Stok: 100)</option>
-                        </select>
-                    </div>
-                    <div class="col-1 d-flex align-items-end justify-content-end">
-                        <button type="button" class="btn btn-sm btn-link text-danger remove-obat" title="Hapus Obat">
-                            <i class="bi bi-trash fs-5"></i>
-                        </button>
-                    </div>
-                    <div class="col-4">
-                        <label class="small text-muted">Jumlah</label>
-                        <input type="number" min="1" max="999" value="1" class="form-control form-control-sm border-0 bg-light" name="qty[]" placeholder="Qty" required>
-                    </div>
-                    <div class="col-8">
-                        <label class="small text-muted">Aturan Minum</label>
-                        <input type="text" class="form-control form-control-sm border-0 bg-light" name="aturan[]" placeholder="Contoh: 3 x 1 Hari (Sesudah Makan)" required>
-                    </div>
-                </div>
-            `;
+        <div class="row g-2">
+          <div class="col-11">
+            <label class="small text-muted">Pilih Obat</label>
+            <select class="form-select form-select-sm border-0 bg-light" name="obat[]" required>
+              ${pilihanObat} </select>
+          </div>
+          <div class="col-1 d-flex align-items-end justify-content-end">
+            <button type="button" class="btn btn-sm btn-link text-danger remove-obat" title="Hapus Obat">
+              <i class="bi bi-trash fs-5"></i>
+            </button>
+          </div>
+          <div class="col-4">
+            <label class="small text-muted">Jumlah</label>
+            <input type="number" min="1" max="999" value="1" class="form-control form-control-sm border-0 bg-light" name="qty[]" placeholder="Qty" required>
+          </div>
+          <div class="col-8">
+            <label class="small text-muted">Aturan Minum</label>
+            <input type="text" class="form-control form-control-sm border-0 bg-light" name="aturan[]" placeholder="Contoh: 3 x 1 Hari" required>
+          </div>
+        </div>
+      `;
       wrapper.appendChild(newField);
     });
 

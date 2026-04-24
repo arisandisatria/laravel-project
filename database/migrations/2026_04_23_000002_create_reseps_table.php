@@ -19,6 +19,8 @@ return new class extends Migration
             $table->enum('status', ['Menunggu', 'Disiapkan', 'Selesai'])->default('Menunggu');
             $table->enum('urgensi', ['Normal', "Semua Urgensi", "Segera (Cito)"])->default('Normal');
             $table->string('kode_resep');
+            $table->integer('jumlah')->default(1);
+            $table->string('aturan')->nullable();
             $table->timestamps();
         });
     }

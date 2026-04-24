@@ -45,39 +45,33 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // DOKTER
     Route::middleware(['role:dokter'])->group(function () {
 
-        Route::get('/dokter', function() {
-            return view('dokter.index');
-        })->name("dokter.dashboard");
+        Route::get('/dokter', [\App\Http\Controllers\DokterController::class, 'index'])->name("dokter.dashboard");
 
-        Route::get('/manajemen-pasien', function() {
-            return view('dokter.pasien');
-        });
+        Route::get('/manajemen-pasien', [\App\Http\Controllers\DokterController::class, 'manajemenPasien'])->name('dokter.pasien');
 
         // REKAM MEDIS
-        Route::get('/rekam-medis/create', function() {
-            return view('dokter.rekam-medis.create');
-        });
+        Route::get('/dokter/rekam-medis/{id}/edit', [App\Http\Controllers\DokterController::class, 'editRekamMedis'])->name('dokter.rekam-medis.edit');
 
-        Route::get('/rekam-medis/create', function() {
-            return view('dokter.rekam-medis.create');
-        });
+        Route::put('/dokter/rekam-medis/{id}', [App\Http\Controllers\DokterController::class, 'updateRekamMedis'])->name('dokter.rekam-medis.update');
 
-        Route::get('/rekam-medis/edit/1', function() {
-            return view('dokter.rekam-medis.edit');
-        });
+        Route::delete('/dokter/rekam-medis/{id}', [App\Http\Controllers\DokterController::class, 'destroyRekamMedis'])->name('dokter.rekam-medis.destroy');
+
+        Route::get('/dokter/rekam-medis/{id}/periksa', [App\Http\Controllers\DokterController::class, 'periksa'])->name('dokter.rekam-medis.periksa');
+
+        Route::post('/dokter/rekam-medis/{id}/periksa', [App\Http\Controllers\DokterController::class, 'simpanPemeriksaan'])->name('dokter.rekam-medis.simpan-pemeriksaan');
 
         // RESEP
         Route::get('/kelola-resep', function() {
             return view('dokter.resep.index');
-        });
+        })->name('dokter.resep.index');
 
-        Route::get('/kelola-resep/create', function() {
-            return view('dokter.resep.create');
-        });
+        Route::get('/kelola-resep/create', [App\Http\Controllers\DokterController::class, 'createResep'])->name('dokter.resep.create');
 
-        Route::get('/kelola-resep/edit/1', function() {
+        Route::post('/kelola-resep/create', [App\Http\Controllers\DokterController::class, 'storeResep'])->name('dokter.resep.store');
+
+        Route::get('/kelola-resep/{id}/edit', function($id) {
             return view('dokter.resep.edit');
-        });
+        })->name('dokter.resep.edit');
 
 
     });

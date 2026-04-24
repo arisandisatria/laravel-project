@@ -73,38 +73,30 @@ class ResepFinalSeeder extends Seeder
         $rekamMedis1 = RekamMedis::create([
             'pasien_id' => $pasien->id,
             'dokter_id' => $dokter->id,
-            'keluhan_utama' => "Sakit aja pokoknya",
-            'diagnosa' => "Gk tahu"
+            'keluhan_utama' => "Demam tinggi dan batuk berdahak",
+            'diagnosa' => "Radang Tenggorokan Akut"
         ]);
 
-        $rekamMedis2 = RekamMedis::create([
-            'pasien_id' => $pasien->id,
-            'dokter_id' => $dokter->id,
-            'keluhan_utama' => "Sakit aja pokoknya",
-            'diagnosa' => "Gk tahu"
-        ]);
-
-        // 6. Buat Resep (Instruksi dari Dokter)
 
         // Resep A: Masih Menunggu (Apoteker belum menyentuh)
         Resep::create([
-            'rekam_medis_id' => $rekamMedis1->id,
-            'obat_id' => $obat1->id, // Dokter meresepkan Amoxicillin
+            'rekam_medis_id' => $rekamMedis1->id, // Tempel ke Rekam Medis 1
+            'obat_id' => $obat1->id,
             'kode_resep' => 'RSP-2001',
             'urgensi' => 'Segera (Cito)',
             'status' => 'Menunggu',
             'created_at' => Carbon::now()->subMinutes(15),
         ]);
 
-        // Resep B: Sudah Selesai (Diserahkan oleh Apoteker sebelumnya)
+        // Resep B: Paracetamol
         Resep::create([
-            'rekam_medis_id' => $rekamMedis2->id,
-            'obat_id' => $obat2->id, // Dokter meresepkan Paracetamol
-            'apoteker_id' => $apoteker->id, // Tanda tangan apoteker yang memproses
+            'rekam_medis_id' => $rekamMedis1->id, // TEMPEL JUGA KE REKAM MEDIS 1
+            'obat_id' => $obat2->id,
+            'apoteker_id' => $apoteker->id,
             'kode_resep' => 'RSP-2002',
             'urgensi' => 'Normal',
-            'status' => 'Selesai',
-            'created_at' => Carbon::now()->subHours(2),
+            'status' => 'Menunggu',
+            'created_at' => Carbon::now()->subMinutes(15),
         ]);
     }
 }

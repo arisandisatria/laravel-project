@@ -21,4 +21,7 @@ class RekamMedis extends Model
     public function resep() {
         return $this->hasOne(Resep::class);
     }
+    public function reseps() {
+        return $this->hasMany(Resep::class);
+    }
 }

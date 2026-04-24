@@ -1,9 +1,4 @@
 <x-app-layout>
-  <x-slot name="header">
-    <h2 class="h4 fw-bold text-dark mb-0">
-      {{ __('') }}
-    </h2>
-  </x-slot>
 
   <style>
     .timeline {
@@ -32,10 +27,18 @@
 
   <div class="card border-0 shadow-sm rounded-4 mb-4">
     <div class="card-body p-3">
-      <div class="input-group">
-        <span class="input-group-text bg-transparent border-0"><i class="bi bi-search"></i></span>
-        <input type="text" class="form-control border-0 shadow-none" placeholder="Masukkan Nama atau ID Pasien untuk melihat riwayat...">
-      </div>
+      <form action="{{ route('dokter.pasien') }}" method="GET" class="row g-2 align-items-center justify-content-between">
+
+        <div class="col-md-6">
+          <div class="input-group">
+            <span class="input-group-text bg-transparent border-0"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control border-0 shadow-none" placeholder="Masukkan Nama atau ID Pasien untuk melihat riwayat...">
+          </div>
+        </div>
+        <div class="col-md-2">
+          <button type="submit" class="btn btn-dark w-100 rounded-3">Cari</button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -52,127 +55,141 @@
           </tr>
         </thead>
         <tbody>
+          @forelse($pasiens as $pasien)
           <tr>
-            <td class="ps-4 fw-bold text-primary">PAS-001</td>
+            <td class="ps-4 fw-bold text-primary">PAS-{{ str_pad($pasien->id, 3, '0', STR_PAD_LEFT) }}</td>
             <td>
-              <div class="fw-bold text-dark">Budi Santoso</div>
+              <div class="fw-bold text-dark">{{ $pasien->user->name ?? 'Data Kosong' }}</div>
             </td>
             <td>
-              <span class="badge bg-light text-dark border fw-normal">Laki-laki</span>
-              <span class="badge bg-light text-dark border fw-normal">45 Thn</span>
+              <span class="badge bg-light text-dark border fw-normal">{{ $pasien->jenis_kelamin }}</span>
+              <span class="badge bg-light text-dark border fw-normal">{{ \Carbon\Carbon::parse($pasien->tanggal_lahir)->age }} Thn</span>
             </td>
-            <td>10 April 2026</td>
+            <td> @if($pasien->rekamMedis->isNotEmpty())
+              {{ $pasien->rekamMedis->first()->created_at->format('d F Y') }}
+              @else
+              <span class="text-muted small">Belum ada kunjungan</span>
+              @endif</td>
             <td class="text-center">
               <div class="d-flex justify-content-center gap-2">
-                <button class="btn btn-sm btn-outline-dark rounded-pill px-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#modalRekamMedis" title="Lihat Riwayat Medis">
+                <button type="button" class="btn btn-sm btn-outline-dark rounded-pill px-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#modalRiwayat-{{ $pasien->id }}" title="Lihat Riwayat Medis">
                   <i class="bi bi-journal-text me-1"></i> Riwayat
                 </button>
 
-                <a href="{{ url('/rekam-medis/create') }}" class="btn btn-sm btn-primary rounded-pill px-3 shadow-sm fw-bold" title="Tambah Pemeriksaan Baru">
+                <a href="{{ route('dokter.rekam-medis.periksa', $pasien->id) }}"" class=" btn btn-sm btn-primary rounded-pill px-3 shadow-sm fw-bold" title="Tambah Pemeriksaan Baru">
                   <i class="bi bi-plus-lg me-1"></i> Periksa Pasien
                 </a>
               </div>
             </td>
           </tr>
+          <div class="modal fade" id="modalRiwayat-{{ $pasien->id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+              <div class="modal-content border-0 shadow-lg rounded-4">
+
+                <div class="modal-header border-bottom-0 pb-0 mt-3 mx-2">
+                  <h5 class="modal-title fw-bold text-dark">
+                    <i class="bi bi-file-earmark-medical text-primary me-2"></i>Riwayat Medis: {{ $pasien->user->name ?? 'Pasien' }}
+                  </h5>
+                  <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body p-4">
+                  @if($pasien->rekamMedis->isEmpty())
+                  <div class="text-center text-muted py-5">
+                    <i class="bi bi-folder-x fs-1 d-block mb-2"></i>
+                    Belum ada catatan riwayat medis untuk pasien ini.
+                  </div>
+                  @else
+                  <div class="position-relative ms-3 border-start border-2 border-primary border-opacity-25 pb-2">
+
+                    @foreach($pasien->rekamMedis as $rm)
+                    <div class="position-relative mb-4 ms-4">
+                      <span class="position-absolute top-0 start-0 translate-middle bg-primary border border-white border-2 rounded-circle" style="width: 14px; height: 14px; margin-left: -1.5rem; margin-top: 0.4rem;"></span>
+
+                      <div class="d-flex align-items-center mb-2">
+                        <span class="fw-bold text-dark me-3">{{ $rm->created_at->format('d F Y') }}</span>
+                        <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle rounded-pill px-2 py-1 small">
+                          {{ $rm->dokter->user->name ?? 'dr. Tidak Diketahui' }}
+                        </span>
+                      </div>
+
+                      <div class="bg-light bg-opacity-50 border border-light-subtle rounded-3 p-3 shadow-sm position-relative">
+                        @if(auth()->id() === $rm->dokter->user_id)
+                        <div class="position-absolute top-0 end-0 mt-2 me-2">
+                          <a href="{{ url('/dokter/rekam-medis/'.$rm->id.'/edit') }}" class="btn btn-sm btn-white border shadow-sm text-warning py-0 px-2" title="Edit Data">
+                            <i class="bi bi-pencil-square small"></i>
+                          </a>
+                          <button type="button" class="btn btn-sm btn-white border shadow-sm text-danger py-0 px-2" data-bs-toggle="modal" data-bs-target="#modalHapusRekamMedis{{ $rm->id }}" title="Hapus Data">
+                            <i class="bi bi-trash small"></i>
+                          </button>
+                        </div>
+                        @endif
+                        <div class="small text-muted mb-1">Diagnosa/Keluhan:</div>
+                        <div class="text-dark fw-medium mb-3">
+                          {{ $rm->keluhan_utama }} {{ $rm->diagnosa ? '- ' . $rm->diagnosa : '' }}
+                        </div>
+
+                        @if($rm->reseps->isNotEmpty())
+                        <div class="small text-muted mb-2">Resep Obat:</div>
+                        <div class="d-flex flex-wrap gap-2">
+                          @foreach($rm->reseps as $resep)
+                          @if($resep->obat)
+                          <span class="badge bg-white text-dark border border-secondary-subtle fw-normal py-1 px-2">
+                            {{ $resep->obat->nama_obat }}
+                          </span>
+                          @endif
+                          @endforeach
+                        </div>
+                        @endif
+                      </div>
+
+
+                    </div>
+                    @endforeach
+
+                  </div>
+                  @endif
+                </div>
+
+              </div>
+            </div>
+          </div>
+          @foreach($pasien->rekamMedis as $rm)
+          <div class="modal fade" id="modalHapusRekamMedis{{ $rm->id }}" tabindex="-1" aria-hidden="true" style="z-index: 1060;">
+            <div class="modal-dialog modal-sm modal-dialog-centered">
+              <div class="modal-content border-0 shadow-lg rounded-4 text-center">
+                <div class="modal-body p-4">
+                  <div class="text-danger mb-3">
+                    <i class="bi bi-exclamation-octagon" style="font-size: 3rem;"></i>
+                  </div>
+                  <h5 class="fw-bold">Hapus Rekam Medis?</h5>
+                  <p class="text-muted small">Catatan medis tanggal {{ $rm->created_at->format('d M Y') }} akan dihapus permanen. Resep yang terkait mungkin juga akan ikut terhapus.</p>
+
+                  <form action="{{ url('/dokter/rekam-medis/'.$rm->id) }}" method="POST" class="d-inline">
+                    @csrf
+                    @method('DELETE')
+                    <div class="d-flex flex-column gap-2 align-items-center mt-4">
+                      <button type="submit" class="btn btn-danger rounded-pill w-100 fw-bold">Ya, Hapus Data</button>
+                      <button type="button" class="btn btn-link btn-sm text-muted" style="width: fit-content;" data-bs-dismiss="modal">Batal</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          @endforeach
+          @empty
+          <tr>
+            <td colspan="5" class="text-center py-5 text-muted">
+              <i class="bi bi-person-x fs-2 d-block mb-2"></i>
+              Tidak ada data pasien yang ditemukan.
+            </td>
+          </tr>
+          @endforelse
         </tbody>
       </table>
     </div>
   </div>
 
-  <div class="modal fade" id="modalRekamMedis" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content border-0 shadow rounded-4">
-        <div class="modal-header border-bottom-0 pt-4 px-4 bg-light rounded-top-4">
-          <h5 class="modal-title fw-bold"><i class="bi bi-file-earmark-medical text-primary me-2"></i>Riwayat Medis: Budi Santoso</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
 
-        <div class="modal-body p-4">
-          <div class="timeline">
-
-            <div class="border-start border-primary border-3 ps-4 pb-4 position-relative timeline-item">
-              <div class="position-absolute start-0 translate-middle-x bg-primary rounded-circle" style="width: 12px; height: 12px; margin-left: -1.5px; top: 5px;"></div>
-
-              <div class="d-flex justify-content-between align-items-start mb-1">
-                <div>
-                  <span class="fw-bold text-dark">10 April 2026</span>
-                  <span class="badge bg-primary bg-opacity-10 text-primary ms-2">dr. Andi Hermawan</span>
-                </div>
-                <div class="timeline-action">
-                  <a href="{{ url('/rekam-medis/edit/1') }}" class="btn btn-sm btn-light text-warning px-2 py-1 border shadow-sm rounded-3" title="Edit Rekam Medis Ini">
-                    <i class="bi bi-pencil-square"></i>
-                  </a>
-                  <button class="btn btn-sm btn-light text-danger px-2 py-1 border shadow-sm rounded-3 ms-1" data-bs-toggle="modal" data-bs-target="#modalHapusRekamMedis" title="Hapus Rekam Medis Ini">
-                    <i class="bi bi-trash"></i>
-                  </button>
-                </div>
-              </div>
-
-              <div class="p-3 bg-light rounded-3 mt-2">
-                <div class="mb-2">
-                  <small class="text-muted d-block">Diagnosa/Keluhan:</small>
-                  <span class="fw-medium text-dark">Demam tinggi dan batuk berdahak selama 3 hari.</span>
-                </div>
-                <div>
-                  <small class="text-muted d-block">Resep Obat:</small>
-                  <span class="badge bg-white border text-dark fw-normal">Paracetamol 500mg</span>
-                  <span class="badge bg-white border text-dark fw-normal">Amoxicillin 500mg</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="border-start border-light border-3 ps-4 pb-2 position-relative timeline-item">
-              <div class="position-absolute start-0 translate-middle-x bg-secondary rounded-circle" style="width: 12px; height: 12px; margin-left: -1.5px; top: 5px;"></div>
-
-              <div class="d-flex justify-content-between align-items-start mb-1 text-muted">
-                <div>
-                  <span class="fw-bold">05 Maret 2026</span>
-                  <span class="badge bg-light text-muted ms-2 border">dr. Sarah</span>
-                </div>
-                <div class="timeline-action">
-                  <a href="{{ url('/rekam-medis/2/edit') }}" class="btn btn-sm btn-light text-warning px-2 py-1 border shadow-sm rounded-3" title="Edit Rekam Medis Ini">
-                    <i class="bi bi-pencil-square"></i>
-                  </a>
-                </div>
-              </div>
-
-              <div class="p-3 bg-light bg-opacity-50 rounded-3 mt-2">
-                <div class="mb-1 text-muted small">
-                  <strong>Diagnosa:</strong> Radang tenggorokan ringan.
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <div class="modal-footer border-top-0 pb-4">
-          <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Tutup</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="modalHapusRekamMedis" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-sm modal-dialog-centered">
-      <div class="modal-content border-0 shadow-lg rounded-4 text-center">
-        <div class="modal-body p-4">
-          <div class="text-danger mb-3">
-            <i class="bi bi-exclamation-octagon" style="font-size: 3rem;"></i>
-          </div>
-          <h5 class="fw-bold">Hapus Rekam Medis?</h5>
-          <p class="text-muted small">Catatan medis tanggal 10 April 2026 akan dihapus permanen. Resep yang terkait mungkin juga akan ikut terhapus.</p>
-
-          <form action="{{ url('/rekam-medis/1') }}" method="POST">
-            @csrf
-            @method('DELETE')
-            <div class="d-flex flex-column gap-2 align-items-center mt-4">
-              <button type="submit" class="btn btn-danger rounded-pill w-100 fw-bold">Ya, Hapus Data</button>
-              <button type="button" class="btn btn-link btn-sm text-muted text-decoration-none" data-bs-dismiss="modal">Batal</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
 </x-app-layout>
