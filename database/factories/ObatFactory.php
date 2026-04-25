@@ -18,7 +18,7 @@ class ObatFactory extends Factory
     public function definition(): array
 {
     return [
-        'kode_obat' => 'OBT-' . $this->faker->unique()->randomNumber(4, true),
+        'kode_obat' => $this->faker->unique()->numerify('OBT-####'),
         'nama_obat' => $this->faker->word() . ' 500mg',
         'kategori' => $this->faker->randomElement(['Antibiotik', 'Analgetik', 'Vitamin']),
         'satuan' => $this->faker->randomElement(['Tablet', 'Botol', 'Kapsul']),
