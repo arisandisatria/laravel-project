@@ -4,7 +4,7 @@
     <p class="text-muted small mb-0">Perbarui diagnosa atau instruksi obat untuk resep <span class="fw-bold text-primary">#RSP-101</span>.</p>
   </div>
 
-  <form action="{{ url('/kelola-resep/1') }}" method="POST">
+  <form action="{{ route('dokter.resep.update', $rm->id) }}" method="POST">
     @csrf
     @method('PUT')
 
@@ -17,13 +17,13 @@
 
             <div class="mb-3">
               <label class="form-label small fw-bold">Pasien</label>
-              <input type="text" class="form-control border-0 bg-light rounded-3 text-muted" value="PAS-001 - Budi Santoso" readonly>
+              <input type="text" class="form-control border-0 bg-light rounded-3 text-muted" value="PAS-{{ str_pad($rm->pasien_id, 3, '0', STR_PAD_LEFT) }} - {{ $rm->pasien->user->name }}" readonly>
               <small class="text-info" style="font-size: 0.7rem;">*Pasien tidak dapat diubah pada mode edit.</small>
             </div>
 
             <div class="mb-0">
               <label class="form-label small fw-bold">Diagnosa / Keluhan</label>
-              <textarea class="form-control border-0 bg-light rounded-3" name="diagnosa" rows="4" required>Demam tinggi disertai batuk berdahak selama 3 hari.</textarea>
+              <textarea class="form-control border-0 bg-light rounded-3" name="diagnosa" rows="4" required>{{ $rm->diagnosa }}</textarea>
             </div>
           </div>
         </div>
@@ -45,14 +45,19 @@
             </div>
 
             <div id="wrapper-obat">
+              @foreach($rm->reseps as $resepLama)
+              @if($resepLama->status === 'Menunggu')
               <div class="item-obat border-bottom pb-3 mb-3">
                 <div class="row g-2">
                   <div class="col-11">
                     <label class="small text-muted">Pilih Obat</label>
                     <select class="form-select form-select-sm border-0 bg-light" name="obat[]" required>
                       <option value="">-- Pilih --</option>
-                      <option value="1" selected>Amoxicillin 500mg (Stok: 48)</option>
-                      <option value="2">Paracetamol 500mg (Stok: 95)</option>
+                      @foreach($obats as $obat)
+                      <option value="{{ $obat->id }}" {{ $obat->id == $resepLama->obat_id ? 'selected' : '' }}>
+                        {{ $obat->nama_obat }} (Stok: {{ $obat->stok }})
+                      </option>
+                      @endforeach
                     </select>
                   </div>
                   <div class="col-1 d-flex align-items-end justify-content-end">
@@ -62,45 +67,22 @@
                   </div>
                   <div class="col-4">
                     <label class="small text-muted">Jumlah</label>
-                    <input type="number" min="1" max="999" class="form-control form-control-sm border-0 bg-light" name="qty[]" value="15" required>
+                    <input type="number" min="1" max="999" class="form-control form-control-sm border-0 bg-light" name="qty[]" value="{{ $resepLama->jumlah }}" required>
                   </div>
                   <div class="col-8">
                     <label class="small text-muted">Aturan Minum</label>
-                    <input type="text" class="form-control form-control-sm border-0 bg-light" name="aturan[]" value="3 x 1 Hari (Habiskan)" required>
+                    <input type="text" class="form-control form-control-sm border-0 bg-light" name="aturan[]" value="{{ $resepLama->aturan }}" required>
                   </div>
                 </div>
               </div>
+              @endif
+              @endforeach
 
-              <div class="item-obat border-bottom pb-3 mb-3">
-                <div class="row g-2">
-                  <div class="col-11">
-                    <label class="small text-muted">Pilih Obat</label>
-                    <select class="form-select form-select-sm border-0 bg-light" name="obat[]" required>
-                      <option value="">-- Pilih --</option>
-                      <option value="1">Amoxicillin 500mg (Stok: 48)</option>
-                      <option value="2" selected>Paracetamol 500mg (Stok: 95)</option>
-                    </select>
-                  </div>
-                  <div class="col-1 d-flex align-items-end justify-content-end">
-                    <button type="button" class="btn btn-sm btn-link text-danger mb-1 remove-obat" title="Hapus Obat">
-                      <i class="bi bi-trash fs-5"></i>
-                    </button>
-                  </div>
-                  <div class="col-4">
-                    <label class="small text-muted">Jumlah</label>
-                    <input type="number" min="1" max="999" class="form-control form-control-sm border-0 bg-light" name="qty[]" value="10" required>
-                  </div>
-                  <div class="col-8">
-                    <label class="small text-muted">Aturan Minum</label>
-                    <input type="text" class="form-control form-control-sm border-0 bg-light" name="aturan[]" value="3 x 1 Hari (Bila Demam)" required>
-                  </div>
-                </div>
-              </div>
+
             </div>
-
             <div class="row g-3 mt-4">
               <div class="col-md-4">
-                <a href="{{ url('/kelola-resep') }}" class="btn btn-light w-100 rounded-pill py-2 text-muted fw-medium">
+                <a href="{{ route('dokter.resep.index') }}" class="btn btn-light w-100 rounded-pill py-2 text-muted fw-medium">
                   Batal
                 </a>
               </div>
@@ -110,45 +92,48 @@
                 </button>
               </div>
             </div>
-
           </div>
         </div>
-      </div>
 
-    </div>
+      </div>
   </form>
 
   <script>
+    const pilihanObat = `
+      <option value="">-- Pilih --</option>
+      @foreach($obats as $obat)
+        <option value="{{ $obat->id }}">{{ $obat->nama_obat }} (Stok: {{ $obat->stok }})</option>
+      @endforeach
+    `;
+
     document.getElementById('add-obat').addEventListener('click', function() {
       const wrapper = document.getElementById('wrapper-obat');
       const newField = document.createElement('div');
       newField.classList.add('item-obat', 'border-bottom', 'pb-3', 'mb-3');
 
       newField.innerHTML = `
-                <div class="row g-2">
-                    <div class="col-11">
-                        <label class="small text-muted">Pilih Obat</label>
-                        <select class="form-select form-select-sm border-0 bg-light" name="obat[]" required>
-                            <option value="">-- Pilih --</option>
-                            <option value="1">Amoxicillin 500mg (Stok: 48)</option>
-                            <option value="2">Paracetamol 500mg (Stok: 95)</option>
-                        </select>
-                    </div>
-                    <div class="col-1 d-flex align-items-end justify-content-end">
-                        <button type="button" class="btn btn-sm btn-link text-danger mb-1 remove-obat" title="Hapus Obat">
-                            <i class="bi bi-trash fs-5"></i>
-                        </button>
-                    </div>
-                    <div class="col-4">
-                        <label class="small text-muted">Jumlah</label>
-                        <input type="number" min="1" max="999" value="1" class="form-control form-control-sm border-0 bg-light" name="qty[]" placeholder="Qty" required>
-                    </div>
-                    <div class="col-8">
-                        <label class="small text-muted">Aturan Minum</label>
-                        <input type="text" class="form-control form-control-sm border-0 bg-light" name="aturan[]" placeholder="Contoh: 3 x 1 Hari (Sesudah Makan)" required>
-                    </div>
-                </div>
-            `;
+        <div class="row g-2">
+          <div class="col-11">
+            <label class="small text-muted">Pilih Obat</label>
+            <select class="form-select form-select-sm border-0 bg-light" name="obat[]" required>
+              ${pilihanObat}
+            </select>
+          </div>
+          <div class="col-1 d-flex align-items-end justify-content-end">
+            <button type="button" class="btn btn-sm btn-link text-danger mb-1 remove-obat" title="Hapus Obat">
+              <i class="bi bi-trash fs-5"></i>
+            </button>
+          </div>
+          <div class="col-4">
+            <label class="small text-muted">Jumlah</label>
+            <input type="number" min="1" max="999" value="1" class="form-control form-control-sm border-0 bg-light" name="qty[]" placeholder="Qty" required>
+          </div>
+          <div class="col-8">
+            <label class="small text-muted">Aturan Minum</label>
+            <input type="text" class="form-control form-control-sm border-0 bg-light" name="aturan[]" placeholder="Contoh: 3 x 1 Hari" required>
+          </div>
+        </div>
+      `;
       wrapper.appendChild(newField);
     });
 

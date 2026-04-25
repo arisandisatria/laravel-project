@@ -22,26 +22,29 @@
 
   <div class="card border-0 shadow-sm rounded-4 mb-4">
     <div class="card-body p-3">
-      <form class="row g-3 align-items-center">
+      <form action="{{ route('dokter.resep.index') }}" method="GET" class="row g-3 align-items-center">
         <div class="col-md-4">
           <div class="input-group gap-2">
             <span class="input-group-text bg-transparent border-0 pe-0"><i class="bi bi-search text-muted"></i></span>
-            <input type="text" class="form-control border-0 bg-light rounded-3 shadow-none" placeholder="Cari nama pasien atau ID resep...">
+            <input type="text" name="search" value="{{ request('search') }}" class="form-control border-0 bg-light rounded-3 shadow-none" placeholder="Cari nama pasien atau ID resep...">
           </div>
         </div>
         <div class="col-md-3">
-          <select class="form-select border-0 bg-light rounded-3 shadow-none small">
-            <option selected>Semua Status</option>
-            <option>Menunggu Obat</option>
-            <option>Siap Diambil</option>
-            <option>Selesai</option>
+          <select name="status" class="form-select border-0 bg-light rounded-3 shadow-none small">
+            <option {{ request('status') == 'Semua Status' ? 'selected' : '' }}>Semua Status</option>
+            <option {{ request('status') == 'Menunggu Obat' ? 'selected' : '' }}>Menunggu Obat</option>
+            <option {{ request('status') == 'Siap Diambil' ? 'selected' : '' }}>Siap Diambil</option>
+            <option {{ request('status') == 'Selesai' ? 'selected' : '' }}>Selesai</option>
           </select>
         </div>
         <div class="col-md-3">
-          <input type="date" class="form-control border-0 bg-light rounded-3 shadow-none small">
+          <input type="date" name="tanggal" value="{{ request('tanggal') }}" class="form-control border-0 bg-light rounded-3 shadow-none small">
         </div>
-        <div class="col-md-2">
-          <button type="button" class="btn btn-dark w-100 rounded-3 small">Filter</button>
+        <div class="col-md-2 d-flex gap-2">
+          <button type="submit" class="btn btn-dark w-100 rounded-3 small">Filter</button>
+          @if(request('search') || request('status') || request('tanggal'))
+          <a href="{{ route('dokter.resep.index') }}" class="btn btn-light rounded-3 small"><i class="bi bi-arrow-clockwise"></i></a>
+          @endif
         </div>
       </form>
     </div>
@@ -60,126 +63,110 @@
           </tr>
         </thead>
         <tbody>
+          @forelse($rekamMedis as $rm)
+          @php
+          $firstResep = $rm->reseps->first();
+          @endphp
           <tr>
             <td class="ps-4">
-              <span class="fw-bold text-primary">#RSP-2026-001</span>
+              <span class="fw-bold text-primary">{{ $firstResep->kode_resep ?? '#RSP-'.$rm->id }}</span>
             </td>
             <td>
               <div class="d-flex align-items-center">
                 <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=random" class="rounded-circle me-2" width="32">
                 <div>
-                  <h6 class="mb-0 fw-bold small">Budi Santoso</h6>
-                  <small class="text-muted" style="font-size: 0.7rem;">Laki-laki, 45 Thn</small>
+                  <h6 class="mb-0 fw-bold small">{{ $rm->pasien->user->name }}</h6>
+                  <small class="text-muted" style="font-size: 0.7rem;">{{ $rm->pasien->jenis_kelamin }}, {{ \Carbon\Carbon::parse($rm->pasien->tanggal_lahir)->age }} Thn</small>
                 </div>
               </div>
             </td>
             <td>
-              <div class="small fw-medium text-dark">12 April 2026</div>
-              <small class="text-muted">09:45 WIB</small>
+              <div class="small fw-medium text-dark">{{ $rm->created_at->format('d F Y') }}</div>
+              <small class="text-muted">{{ $rm->created_at->format('H:i') }} WIB</small>
             </td>
             <td>
-              <span class="badge bg-warning bg-opacity-10 text-warning px-3 py-2 rounded-pill small">
-                <i class="bi bi-hourglass-split me-1"></i> Menunggu Obat
-              </span>
+              @if($firstResep->status === 'Menunggu')
+              <span class="badge bg-warning bg-opacity-10 text-warning px-3 py-2 rounded-pill small"><i class="bi bi-hourglass-split me-1"></i> Menunggu Obat</span>
+              @elseif($firstResep->status === 'Diproses')
+              <span class="badge bg-info bg-opacity-10 text-info px-3 py-2 rounded-pill small"><i class="bi bi-gear-fill me-1"></i> Sedang Diramu</span>
+              @elseif($firstResep->status === 'Disiapkan')
+              <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill small"><i class="bi bi-bag-check me-1"></i> Siap Diambil</span>
+              @else
+              <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill small"><i class="bi bi-check-circle me-1"></i> Selesai</span>
+              @endif
             </td>
             <td class="text-center">
+              @if($firstResep->status === 'Selesai')
+              <div class="text-muted small"><em>Tidak ada aksi</em></div>
+              @else
               <div class="d-flex justify-content-center gap-2">
-                <button class="btn btn-sm btn-light rounded-circle shadow-sm border" data-bs-toggle="modal" data-bs-target="#modalLihatResep" title="Lihat Detail">
+                <button class="btn btn-sm btn-light rounded-circle shadow-sm border" data-bs-toggle="modal" data-bs-target="#modalLihatResep-{{ $rm->id }}" title="Lihat Detail">
                   <i class="bi bi-eye text-primary"></i>
                 </button>
-                <a href="{{ url('/kelola-resep/edit/1') }}" class="btn btn-sm btn-light rounded-circle shadow-sm border" title="Edit Resep">
+                <a href="{{ route('dokter.resep.edit', $rm->id) }}" class="btn btn-sm btn-light rounded-circle shadow-sm border" title="Edit Resep">
                   <i class="bi bi-pencil-square text-warning"></i>
                 </a>
-                <button class="btn btn-sm btn-light rounded-circle shadow-sm border" data-bs-toggle="modal" data-bs-target="#modalHapusResep" title="Hapus">
+                <button class="btn btn-sm btn-light rounded-circle shadow-sm border" data-bs-toggle="modal" data-bs-target="#modalHapusResep-{{ $rm->id }}" title="Hapus">
                   <i class="bi bi-trash text-danger"></i>
                 </button>
               </div>
+              @endif
             </td>
           </tr>
-
+          @empty
           <tr>
-            <td class="ps-4">
-              <span class="fw-bold text-primary">#RSP-2026-002</span>
-            </td>
-            <td>
-              <div class="d-flex align-items-center">
-                <img src="https://ui-avatars.com/api/?name=Siti+Aminah&background=random" class="rounded-circle me-2" width="32">
-                <div>
-                  <h6 class="mb-0 fw-bold small">Siti Aminah</h6>
-                  <small class="text-muted" style="font-size: 0.7rem;">Perempuan, 28 Thn</small>
-                </div>
-              </div>
-            </td>
-            <td>
-              <div class="small fw-medium text-dark">11 April 2026</div>
-              <small class="text-muted">14:20 WIB</small>
-            </td>
-            <td>
-              <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill small">
-                <i class="bi bi-check-circle me-1"></i> Selesai
-              </span>
-            </td>
-            <td class="text-center text-muted small">
-              <em>Tidak ada aksi</em>
-            </td>
+            <td colspan="5" class="text-center py-5 text-muted">Belum ada resep yang diterbitkan.</td>
           </tr>
+          @endforelse
         </tbody>
       </table>
     </div>
 
     <div class="card-footer bg-white border-top-0 py-3">
       <div class="d-flex justify-content-between align-items-center">
-        <small class="text-muted">Menampilkan 2 dari 48 resep</small>
+        <small class="text-muted">Menampilkan {{ $rekamMedis->firstItem() ?? 0 }} - {{ $rekamMedis->lastItem() ?? 0 }} dari {{ $rekamMedis->total() }} resep</small>
         <nav>
-          <ul class="pagination pagination-sm mb-0">
-            <li class="page-item disabled"><a class="page-link border-0 bg-light rounded-circle me-2" href="#"><i class="bi bi-chevron-left"></i></a></li>
-            <li class="page-item active"><a class="page-link border-0 rounded-circle me-2" href="#">1</a></li>
-            <li class="page-item"><a class="page-link border-0 bg-light text-dark rounded-circle" href="#"><i class="bi bi-chevron-right"></i></a></li>
-          </ul>
+          {{ $rekamMedis->links('pagination::bootstrap-5') }}
         </nav>
       </div>
     </div>
   </div>
 
-  <div class="modal fade" id="modalLihatResep" tabindex="-1" aria-hidden="true">
+  @foreach($rekamMedis as $rm)
+  <div class="modal fade" id="modalLihatResep-{{ $rm->id }}" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow rounded-4">
         <div class="modal-header border-0 pt-4 px-4">
-          <h5 class="fw-bold mb-0">Detail Resep #RSP-2026-001</h5>
+          <h5 class="fw-bold mb-0">Detail Resep {{ $rm->reseps->first()->kode_resep ?? '' }}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body px-4">
           <div class="mb-3">
             <small class="text-muted d-block">Pasien:</small>
-            <span class="fw-bold">Budi Santoso (Laki-laki, 45 Thn)</span>
+            <span class="fw-bold">{{ $rm->pasien->user->name }} ({{ $rm->pasien->jenis_kelamin }}, {{ \Carbon\Carbon::parse($rm->pasien->tanggal_lahir)->age }} Thn)</span>
           </div>
           <div class="mb-3">
             <small class="text-muted d-block">Diagnosa:</small>
-            <p class="small bg-light p-2 rounded">Demam tinggi disertai batuk berdahak.</p>
+            <p class="small bg-light p-2 rounded">{{ $rm->diagnosa }}</p>
           </div>
           <h6 class="fw-bold small mb-2 text-uppercase text-muted">Daftar Obat</h6>
           <ul class="list-group list-group-flush border rounded-3 mb-4">
+            @foreach($rm->reseps as $resep)
             <li class="list-group-item d-flex justify-content-between align-items-center small p-3">
               <div>
-                <strong>Amoxicillin 500mg</strong>
-                <div class="text-muted">3 x 1 Hari (Habiskan)</div>
+                <strong>{{ $resep->obat->nama_obat ?? 'Obat Dihapus' }}</strong>
+                <div class="text-muted">{{ $resep->aturan }}</div>
               </div>
-              <span class="badge bg-primary rounded-pill">15 Tab</span>
+              <span class="badge bg-primary rounded-pill">{{ $resep->jumlah }} {{ $resep->obat->satuan ?? 'Item' }}</span>
             </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center small p-3">
-              <div>
-                <strong>Paracetamol 500mg</strong>
-                <div class="text-muted">3 x 1 Hari (Bila Demam)</div>
-              </div>
-              <span class="badge bg-primary rounded-pill">10 Tab</span>
-            </li>
+            @endforeach
           </ul>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="modal fade" id="modalHapusResep" tabindex="-1" aria-hidden="true">
+  <div class="modal fade" id="modalHapusResep-{{ $rm->id }}" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered">
       <div class="modal-content border-0 shadow rounded-4 text-center">
         <div class="modal-body p-4">
@@ -187,13 +174,18 @@
             <i class="bi bi-exclamation-octagon" style="font-size: 3rem;"></i>
           </div>
           <h5 class="fw-bold">Hapus Resep?</h5>
-          <p class="text-muted small">Data resep #RSP-2026-001 akan dihapus permanen dari sistem.</p>
-          <div class="d-flex flex-column gap-2 align-items-center mt-4">
-            <button type="button" class="btn btn-danger rounded-pill w-100 fw-bold">Ya, Hapus Resep</button>
-            <button type="button" class="btn btn-link btn-sm text-muted" style="width: fit-content;" data-bs-dismiss="modal">Batal</button>
-          </div>
+          <p class="text-muted small">Data resep ini akan dihapus permanen dari sistem.</p>
+          <form action="{{ route('dokter.resep.destroy', $rm->id) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <div class="d-flex flex-column gap-2 align-items-center mt-4">
+              <button type="submit" class="btn btn-danger rounded-pill w-100 fw-bold">Ya, Hapus Resep</button>
+              <button type="button" class="btn btn-link btn-sm text-muted" style="width: fit-content;" data-bs-dismiss="modal">Batal</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
   </div>
+  @endforeach
 </x-app-layout>

@@ -33,13 +33,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::middleware(['role:pasien'])->group(function () {
 
-        Route::get('/pasien', function() {
-            return view('pasien.index');
-        })->name("pasien.dashboard");
+        Route::get('/dashboard-pasien', [\App\Http\Controllers\PasienController::class, 'index'])->name('pasien.dashboard');
 
-        Route::get('/jadwal-minum-obat', function () {
-            return view('pasien.jadwal');
-        });
+        Route::get('/jadwal-minum', [App\Http\Controllers\PasienController::class, 'jadwalMinum'])->name('pasien.jadwal');
+
+        Route::post('/jadwal-minum/tandai', [App\Http\Controllers\PasienController::class, 'tandaiDiminum'])->name('pasien.jadwal.tandai');
+
+        Route::get('/jadwal-minum/riwayat', [App\Http\Controllers\PasienController::class, 'riwayatResep'])->name('pasien.riwayat-resep');
     });
 
     // DOKTER
@@ -61,19 +61,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/dokter/rekam-medis/{id}/periksa', [App\Http\Controllers\DokterController::class, 'simpanPemeriksaan'])->name('dokter.rekam-medis.simpan-pemeriksaan');
 
         // RESEP
-        Route::get('/kelola-resep', function() {
-            return view('dokter.resep.index');
-        })->name('dokter.resep.index');
+        Route::get('/kelola-resep', [App\Http\Controllers\DokterController::class, 'indexResep'])->name('dokter.resep.index');
 
         Route::get('/kelola-resep/create', [App\Http\Controllers\DokterController::class, 'createResep'])->name('dokter.resep.create');
 
         Route::post('/kelola-resep/create', [App\Http\Controllers\DokterController::class, 'storeResep'])->name('dokter.resep.store');
 
-        Route::get('/kelola-resep/{id}/edit', function($id) {
-            return view('dokter.resep.edit');
-        })->name('dokter.resep.edit');
+        Route::get('/kelola-resep/{id}/edit', [App\Http\Controllers\DokterController::class, 'editResep'])->name('dokter.resep.edit');
 
+        Route::put('/kelola-resep/{id}', [App\Http\Controllers\DokterController::class, 'updateResep'])->name('dokter.resep.update');
 
+        Route::delete('/kelola-resep/{id}', [App\Http\Controllers\DokterController::class, 'destroyResep'])->name('dokter.resep.destroy');
     });
 
     // APOTEKER

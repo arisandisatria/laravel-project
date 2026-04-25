@@ -84,12 +84,12 @@
   <div class="nav flex-column mt-3">
     <small class="text-uppercase text-muted fw-bold px-4 mb-2" style="font-size: 0.7rem;">Menu Utama</small>
 
-    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard', 'apoteker.dashboard', 'dokter.dashboard') ? 'active' : '' }}">
+    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard', 'apoteker.dashboard', 'dokter.dashboard', 'pasien.dashboard') ? 'active' : '' }}">
       <i class="bi bi-speedometer2"></i> Dashboard
     </a>
 
     @if (Auth::user()->role === 'pasien')
-    <a href="{{ url('/jadwal-minum-obat') }}" class="nav-link {{ request()->is('jadwal-minum*') ? 'active' : '' }}">
+    <a href="{{ url('/jadwal-minum') }}" class="nav-link {{ request()->is('jadwal-minum*') ? 'active' : '' }}">
       <i class="bi bi-calendar2-check"></i> Jadwal Minum Obat
     </a>
     @endif

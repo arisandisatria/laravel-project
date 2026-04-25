@@ -176,6 +176,59 @@ class DokterController extends Controller
                          ->with('success', 'Pemeriksaan selesai dan berhasil disimpan tanpa resep obat.');
     }
 
+    public function indexResep(Request $request)
+    {
+        $dokter = Dokter::where('user_id', Auth::id())->firstOrFail();
+
+        $query = RekamMedis::with(['pasien.user', 'reseps.obat'])
+                           ->where('dokter_id', $dokter->id)
+                           ->whereHas('reseps')
+                           ->latest();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->whereHas('pasien.user', function($qu) use ($search) {
+                    $qu->where('name', 'like', "%{$search}%");
+                })
+                ->orWhereHas('reseps', function($qr) use ($search) {
+                    $qr->where('kode_resep', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        if ($request->filled('status') && $request->status !== 'Semua Status') {
+            $dbStatus = $request->status;
+            if ($request->status === 'Menunggu Obat') $dbStatus = 'Menunggu';
+            if ($request->status === 'Siap Diambil') $dbStatus = 'Disiapkan';
+
+            $query->whereHas('reseps', function($q) use ($dbStatus) {
+                $q->where('status', $dbStatus);
+            });
+        }
+
+        if ($request->filled('tanggal')) {
+            $query->whereDate('created_at', $request->tanggal);
+        }
+
+        $rekamMedis = $query->paginate(10)->withQueryString();
+
+        return view('dokter.resep.index', compact('rekamMedis'));
+    }
+
+    public function destroyResep($id)
+    {
+        $rm = RekamMedis::findOrFail($id);
+
+        if (Auth::id() !== $rm->dokter->user_id) {
+            abort(403, 'Akses Ditolak.');
+        }
+
+        $rm->reseps()->delete();
+
+        return back()->with('success', 'Seluruh resep untuk pasien tersebut berhasil dihapus.');
+    }
+
     public function createResep()
     {
         $pasiens = Pasien::with('user')->get();
@@ -183,6 +236,62 @@ class DokterController extends Controller
         $obats = Obat::where('stok', '>', 0)->get();
 
         return view('dokter.resep.create', compact('pasiens', 'obats'));
+    }
+
+    public function editResep($id)
+    {
+        // Ambil data Rekam Medis beserta relasi pasien dan resepnya
+        $rm = RekamMedis::with(['pasien.user', 'reseps.obat'])->findOrFail($id);
+
+        // Keamanan: Pastikan resep ini milik dokter yang login
+        if (Auth::id() !== $rm->dokter->user_id) {
+            abort(403, 'Akses Ditolak.');
+        }
+
+        // Ambil daftar obat untuk pilihan di dropdown
+        $obats = Obat::where('stok', '>', 0)->get();
+
+        return view('dokter.resep.edit', compact('rm', 'obats'));
+    }
+
+    public function updateResep(Request $request, $id)
+    {
+        $rm = RekamMedis::findOrFail($id);
+
+        if (Auth::id() !== $rm->dokter->user_id) {
+            return back()->with('error', 'Akses Ditolak.');
+        }
+
+        $request->validate([
+            'diagnosa' => 'required|string',
+            'obat'     => 'required|array',
+            'qty'      => 'required|array',
+            'aturan'   => 'required|array',
+        ]);
+
+        // 1. Update Diagnosa di tabel rekam_medis
+        $rm->update(['diagnosa' => $request->diagnosa]);
+
+        // 2. HAPUS resep lama (Hanya yang statusnya masih 'Menunggu')
+        // Ini fitur cerdas: Mencegah dokter mengubah resep yang sedang diramu apoteker!
+        $rm->reseps()->where('status', 'Menunggu')->delete();
+
+        // 3. Masukkan daftar resep yang baru diedit
+        foreach ($request->obat as $key => $obat_id) {
+            if ($obat_id != null) {
+                Resep::create([
+                    'rekam_medis_id' => $rm->id,
+                    'obat_id'        => $obat_id,
+                    'kode_resep'     => 'RSP-' . rand(1000, 9999),
+                    'urgensi'        => 'Normal',
+                    'status'         => 'Menunggu',
+                    'jumlah'         => $request->qty[$key],
+                    'aturan'         => $request->aturan[$key],
+                ]);
+            }
+        }
+
+        return redirect()->route('dokter.resep.index')->with('success', 'E-Resep berhasil diperbarui!');
     }
 
     public function storeResep(Request $request)
