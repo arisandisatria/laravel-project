@@ -18,13 +18,12 @@ class ObatFactory extends Factory
    public function definition(): array
     {
         return [
-            // Ganti $this->faker menjadi fake()
-            'kode_obat' => fake()->unique()->numerify('OBT-####'),
-            'nama_obat' => fake()->word() . ' 500mg',
-            'kategori'  => fake()->randomElement(['Antibiotik', 'Analgetik', 'Vitamin']),
-            'satuan'    => fake()->randomElement(['Tablet', 'Botol', 'Kapsul']),
-            'stok'      => fake()->numberBetween(10, 200),
-            'harga'     => fake()->numberBetween(2, 50) * 1000,
+        //     'kode_obat' => fake()->unique()->numerify('OBT-####'),
+        //     'nama_obat' => fake()->word() . ' 500mg',
+        //     'kategori'  => fake()->randomElement(['Antibiotik', 'Analgetik', 'Vitamin']),
+        //     'satuan'    => fake()->randomElement(['Tablet', 'Botol', 'Kapsul']),
+        //     'stok'      => fake()->numberBetween(10, 200),
+        //     'harga'     => fake()->numberBetween(2, 50) * 1000,
         ];
     }
 }
