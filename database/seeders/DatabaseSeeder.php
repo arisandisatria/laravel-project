@@ -53,6 +53,6 @@ class DatabaseSeeder extends Seeder
             'jenis_kelamin' => 'Laki-laki',
         ]);
 
-        Obat::factory(20)->create();
+        // Obat::factory(20)->create();
     }
 }
