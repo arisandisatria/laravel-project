@@ -101,7 +101,7 @@
                 @forelse ($resepTerbaru as $resep)
                 <tr>
                   <td class="fw-semibold text-primary">{{ $resep->kode_resep }}</td>
-                  <td>{{ $resep->rekamMedis->pasien->user_name ?? 'Data Pasien Hilang' }}</td>
+                  <td>{{ $resep->rekamMedis->pasien->user->name ?? 'Data Pasien Hilang' }}</td>
                   <td class="text-muted small">{{ $resep->created_at->format('h:i A') }}</td>
                   <td>
                     @if($resep->status === 'Selesai')
@@ -111,7 +111,7 @@
                     @endif
                   </td>
                   <td class="text-end">
-                    <button class="btn btn-sm btn-light border-0" data-bs-toggle="modal" data-bs-target="#modalLihatResep">
+                    <button class="btn btn-sm btn-light border-0" data-bs-toggle="modal" data-bs-target="#modalLihatResep-{{ $resep->id }}">
                       <i class="bi bi-eye"></i>
                     </button>
                   </td>
@@ -172,38 +172,33 @@
     </div>
   </div>
 
-  <div class="modal fade" id="modalLihatResep" tabindex="-1" aria-hidden="true">
+  <div class="modal fade" id="modalLihatResep-{{ $resep->id }}" tabindex=" -1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow rounded-4">
         <div class="modal-header border-0 pt-4 px-4">
-          <h5 class="fw-bold mb-0">Detail Resep #RSP-101</h5>
+          <h5 class="fw-bold mb-0">Detail Resep {{ $resep->kode_resep }}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body px-4 pb-4">
           <div class="mb-3">
             <small class="text-muted d-block">Pasien:</small>
-            <span class="fw-bold">Budi Santoso (Laki-laki, 45 Thn)</span>
+            <span class="fw-bold">{{ $resep->rekamMedis->pasien->user->name }} ({{ $resep->rekamMedis->pasien->jenis_kelamin }}, {{ \Carbon\Carbon::parse($resep->rekamMedis->pasien->tanggal_lahir)->age }} Thn)</span>
           </div>
           <div class="mb-3">
             <small class="text-muted d-block">Diagnosa:</small>
-            <p class="small bg-light p-2 rounded">Demam tinggi disertai batuk berdahak.</p>
+            <p class="small bg-light p-2 rounded">{{ $resep->rekamMedis->diagnosa }}</p>
           </div>
           <h6 class="fw-bold small mb-2 text-uppercase text-muted">Daftar Obat</h6>
           <ul class="list-group list-group-flush border rounded-3">
+            @foreach($resep->rekamMedis->reseps as $itemObat)
             <li class="list-group-item d-flex justify-content-between align-items-center small p-3">
               <div>
-                <strong>Amoxicillin 500mg</strong>
-                <div class="text-muted">3 x 1 Hari (Habiskan)</div>
+                <strong>{{ optional($itemObat->obat)->nama_obat ?? 'Obat Dihapus' }}</strong>
+                <div class="text-muted">{{ $itemObat->aturan }}</div>
               </div>
-              <span class="badge bg-primary rounded-pill">15 Tab</span>
+              <span class="badge bg-primary rounded-pill">{{ $itemObat->jumlah }} {{ optional($itemObat->obat)->satuan }}</span>
             </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center small p-3">
-              <div>
-                <strong>Paracetamol 500mg</strong>
-                <div class="text-muted">3 x 1 Hari (Bila Demam)</div>
-              </div>
-              <span class="badge bg-primary rounded-pill">10 Tab</span>
-            </li>
+            @endforeach
           </ul>
         </div>
       </div>

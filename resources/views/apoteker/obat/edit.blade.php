@@ -3,8 +3,8 @@
     .form-control:focus,
     .form-select:focus {
       background-color: #fff !important;
-      border: 1px solid #198754 !important;
-      box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.1) !important;
+      border: 0px;
+      /* box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.1) !important; */
     }
 
     input[type=number]::-webkit-inner-spin-button,
@@ -53,6 +53,8 @@
               <option value="Antibiotik" {{ old('kategori', $item->kategori) == 'Antibiotik' ? 'selected' : '' }}>Antibiotik</option>
               <option value="Analgetik" {{ old('kategori', $item->kategori) == 'Analgetik' ? 'selected' : '' }}>Analgetik</option>
               <option value="Vitamin" {{ old('kategori', $item->kategori) == 'Vitamin' ? 'selected' : '' }}>Vitamin</option>
+              <option value="Suplemen" {{ old('kategori', $item->kategori) == 'Suplemen' ? 'selected' : '' }}>Suplemen</option>
+              <option value="Obat Luar" {{ old('kategori', $item->kategori) == 'Obat Luar' ? 'selected' : '' }}>Obat Luar</option>
             </select>
           </div>
 
@@ -62,6 +64,8 @@
               <option value="Tablet" {{ old('satuan', $item->satuan) == 'Tablet' ? 'selected' : '' }}>Tablet</option>
               <option value="Botol" {{ old('satuan', $item->satuan) == 'Botol' ? 'selected' : '' }}>Botol</option>
               <option value="Kapsul" {{ old('satuan', $item->satuan) == 'Kapsul' ? 'selected' : '' }}>Kapsul</option>
+              <option value="Tube" {{ old('satuan', $item->satuan) == 'Tube' ? 'selected' : '' }}>Tube (Salep)</option>
+              <option value="Pcs" {{ old('satuan', $item->satuan) == 'Pcs' ? 'selected' : '' }}>Pcs</option>
             </select>
           </div>
 
@@ -80,7 +84,7 @@
           <div class="col-md-4"> <label class="form-label small fw-bold text-muted">Tanggal Kedaluwarsa (Expired)</label>
             <div class="input-group">
               <span class="input-group-text bg-light border-0"><i class="bi bi-calendar-x text-muted"></i></span>
-              <input type="date" class="form-control border-0 bg-light py-2 @error('tanggal_expired') is-invalid @enderror" name="tanggal_expired" value="{{ old('tanggal_expired', $item->tanggal_expired->format('Y-m-d') ?? '') }}" required>
+              <input type="date" class="form-control border-0 bg-light py-2 @error('tanggal_expired') is-invalid @enderror" name="tanggal_expired" value="{{ $item->tanggal_expired?->format('Y-m-d') ?? '' }}" required>
             </div>
             @error('tanggal_expired')
             <div class="small text-danger mt-1">{{ $message }}</div>

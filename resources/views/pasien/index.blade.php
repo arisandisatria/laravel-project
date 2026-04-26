@@ -23,14 +23,12 @@
   </div>
 
   @php
-  // --- LOGIKA CERDAS UNTUK DASHBOARD ---
   $jadwalPagi = []; $jadwalSiang = []; $jadwalMalam = [];
-  $targetMingguan = 15; // Default target
+  $targetMingguan = 15;
   $logsThisWeek = 0;
   $tepatWaktu = 0; $terlambat = 0; $terlewati = 0;
 
   if($rmTerakhir && $rmTerakhir->reseps->isNotEmpty()) {
-  // 1. Kelompokkan Obat ke Pagi, Siang, Malam berdasarkan Aturan (Misal 3x1)
   foreach($rmTerakhir->reseps as $resep) {
   preg_match('/(\d+)\s*[xX]\s*\d+/', $resep->aturan, $matches);
   $dosis = isset($matches[1]) && (int)$matches[1] > 0 ? (int)$matches[1] : 1;
@@ -40,12 +38,10 @@
   if($dosis >= 2) $jadwalMalam[] = $resep;
   }
 
-  // 2. Ambil data Log dari Database langsung di Blade (Untuk kemudahan)
   $logHariIni = \App\Models\LogKonsumsi::where('pasien_id', $rmTerakhir->pasien_id)
   ->where('tanggal', \Carbon\Carbon::today()->toDateString())
   ->get();
 
-  // 3. Ambil data Log Mingguan untuk Progress Kepatuhan
   $startOfWeek = \Carbon\Carbon::now()->startOfWeek()->toDateString();
   $endOfWeek = \Carbon\Carbon::now()->endOfWeek()->toDateString();
   $logMingguan = \App\Models\LogKonsumsi::where('pasien_id', $rmTerakhir->pasien_id)
@@ -55,7 +51,6 @@
   $logsThisWeek = $logMingguan->count();
   $targetMingguan = (count($jadwalPagi) + count($jadwalSiang) + count($jadwalMalam)) * 7;
 
-  // Asumsi data dummy untuk status keterlambatan
   $tepatWaktu = $logsThisWeek > 0 ? $logsThisWeek - 1 : 0;
   $terlambat = $logsThisWeek > 0 ? 1 : 0;
   $terlewati = max(0, ( \Carbon\Carbon::now()->dayOfWeekIso * (count($jadwalPagi) + count($jadwalSiang) + count($jadwalMalam)) ) - $logsThisWeek);
@@ -82,9 +77,9 @@
           <div class="timeline">
 
             <div class="d-flex mb-4">
-              <div class="flex-shrink-0 text-center" style="width: 70px;">
+              <div class="flex-shrink-0 text-center" style="width: 80px;">
                 <span class="badge bg-info bg-opacity-10 text-info p-2 rounded-3 w-100">PAGI</span>
-                <small class="text-muted d-block mt-1">07:00</small>
+                <small class="text-muted d-block mt-1" style="font-size: 0.7rem;">06:00 - 10:00</small>
               </div>
               <div class="ms-4 p-3 bg-light rounded-4 flex-grow-1 border-start border-info border-4 shadow-sm">
                 @forelse($jadwalPagi as $resep)
@@ -111,9 +106,9 @@
             </div>
 
             <div class="d-flex mb-4">
-              <div class="flex-shrink-0 text-center" style="width: 70px;">
+              <div class="flex-shrink-0 text-center" style="width: 80px;">
                 <span class="badge bg-warning bg-opacity-10 text-warning p-2 rounded-3 w-100">SIANG</span>
-                <small class="text-muted d-block mt-1">13:00</small>
+                <small class="text-muted d-block mt-1" style="font-size: 0.7rem;">11:00 - 15:00</small>
               </div>
               <div class="ms-4 p-3 bg-light rounded-4 flex-grow-1 border-start border-warning border-4 shadow-sm">
                 @forelse($jadwalSiang as $resep)
@@ -140,9 +135,9 @@
             </div>
 
             <div class="d-flex">
-              <div class="flex-shrink-0 text-center" style="width: 70px;">
+              <div class="flex-shrink-0 text-center" style="width: 80px;">
                 <span class="badge bg-dark bg-opacity-10 text-dark p-2 rounded-3 w-100">MALAM</span>
-                <small class="text-muted d-block mt-1">20:00</small>
+                <small class="text-muted d-block mt-1" style="font-size: 0.7rem;">18:00 - 23:59</small>
               </div>
               <div class="ms-4 p-3 bg-light bg-opacity-25 rounded-4 flex-grow-1 border-start border-success border-4 shadow-sm">
                 @forelse($jadwalMalam as $resep)
@@ -283,7 +278,6 @@
             <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-4" onclick="window.print()">
               <i class="bi bi-printer me-2"></i>Cetak PDF
             </button>
-            <button type="button" class="btn btn-link btn-sm text-muted text-decoration-none" data-bs-dismiss="modal">Tutup</button>
           </div>
         </div>
       </div>

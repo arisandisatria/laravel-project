@@ -32,7 +32,7 @@
         <div class="col-md-6">
           <div class="input-group">
             <span class="input-group-text bg-transparent border-0"><i class="bi bi-search"></i></span>
-            <input type="text" class="form-control border-0 shadow-none" placeholder="Masukkan Nama atau ID Pasien untuk melihat riwayat...">
+            <input type="text" class="form-control border-0 shadow-none" name="search" placeholder="Masukkan Nama Pasien untuk melihat riwayat...">
           </div>
         </div>
         <div class="col-md-2">

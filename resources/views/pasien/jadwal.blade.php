@@ -22,26 +22,21 @@
 
       @forelse($resepAktif as $resep)
       @php
-      // 1. LOGIKA CERDAS: Ekstrak Angka Dosis dari Teks Aturan (Misal: "2 x 1" -> Dosis = 2)
       preg_match('/(\d+)\s*[xX]\s*\d+/', $resep->aturan, $matches);
       $dosisHarian = isset($matches[1]) && (int)$matches[1] > 0 ? (int)$matches[1] : 1;
 
-      // 2. TENTUKAN WAKTU BERDASARKAN DOSIS
-      // 1x = Pagi | 2x = Pagi, Malam | 3x = Pagi, Siang, Malam
       $tampilPagi = in_array($dosisHarian, [1, 2, 3]);
       $tampilSiang = in_array($dosisHarian, [3]);
       $tampilMalam = in_array($dosisHarian, [2, 3]);
 
-      // Cek apakah hari ini sudah diklik
       $sudahPagi = $logHariIni->where('resep_id', $resep->id)->where('waktu', 'Pagi')->isNotEmpty();
       $sudahSiang = $logHariIni->where('resep_id', $resep->id)->where('waktu', 'Siang')->isNotEmpty();
       $sudahMalam = $logHariIni->where('resep_id', $resep->id)->where('waktu', 'Malam')->isNotEmpty();
 
-      // 3. LOGIKA DURASI & PROGRESS: (Jumlah Obat / Dosis Harian)
       $jumlahObat = $resep->jumlah > 0 ? $resep->jumlah : 1;
       $durasiHari = ceil($jumlahObat / $dosisHarian);
 
-      // Hitung hari ke berapa pasien mengonsumsi obat ini
+
       $hariKe = \Carbon\Carbon::parse($resep->created_at)->startOfDay()->diffInDays(\Carbon\Carbon::today()) + 1;
       $persenProgress = min(100, ($hariKe / $durasiHari) * 100);
       $sisaHari = max(0, $durasiHari - $hariKe);

@@ -93,8 +93,8 @@
 
     <div class="col-lg-3">
       <div class="card shadow-sm border-0 rounded-4 bg-primary text-white mb-4 position-relative overflow-hidden">
-        <div class="position-absolute end-0 bottom-0 opacity-10 p-3">
-          <i class="bi bi-shield-lock" style="font-size: 5rem;"></i>
+        <div class="position-absolute end-0 bottom-0 opacity-25 p-3">
+          <i class="bi bi-shield-lock opacity-5" style="font-size: 5rem;"></i>
         </div>
         <div class="card-body p-4 position-relative z-1">
           <h6 class="fw-bold mb-3"><i class="bi bi-shield-check me-2"></i>Privasi Data</h6>
@@ -146,11 +146,10 @@
             </ul>
           </div>
 
-          <div class="d-flex gap-2">
-            <button type="button" class="btn btn-outline-primary rounded-pill w-100 fw-bold shadow-sm" onclick="window.print()">
-              <i class="bi bi-printer me-2"></i>Cetak E-Resep
+          <div class="d-flex flex-column justify-content-center align-items-center gap-2">
+            <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-4" onclick="window.print()">
+              <i class="bi bi-printer me-2"></i>Cetak PDF
             </button>
-            <button type="button" class="btn btn-light rounded-pill px-4 text-muted border shadow-sm" data-bs-dismiss="modal">Tutup</button>
           </div>
         </div>
       </div>

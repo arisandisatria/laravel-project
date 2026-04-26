@@ -62,10 +62,10 @@ class ResepController extends Controller
 
 
         if ($request->status === 'Selesai' && $resep->status !== 'Selesai') {
-            if (!$obatDiresepkan || $obatDiresepkan->stok < 1) {
+            if (!$obatDiresepkan || $obatDiresepkan->stok < $resep->jumlah) {
                 return back()->with('error', 'Gagal memproses! Stok obat tidak mencukupi untuk resep ini.');
             }
-            $obatDiresepkan->decrement('stok', 1);
+            $obatDiresepkan->decrement('stok', $resep->jumlah);
         }
 
         $resep->update([

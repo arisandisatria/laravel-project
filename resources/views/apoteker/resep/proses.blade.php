@@ -14,15 +14,15 @@
           <h6 class="fw-bold mb-3 border-bottom pb-2 text-primary">Informasi Resep</h6>
           <div class="mb-3">
             <small class="text-muted d-block">ID Resep / Tanggal:</small>
-            <span class="fw-bold">#RSP-101</span> / <span class="small">12 Apr 2026</span>
+            <span class="fw-bold">{{ $resep->kode_resep }}</span> / <span class="small">{{ $resep->created_at->format('d F Y') }}</span>
           </div>
           <div class="mb-3">
             <small class="text-muted d-block">Nama Pasien:</small>
-            <span class="fw-bold text-dark">Andi Wijaya</span>
+            <span class="fw-bold text-dark">{{ $resep->rekamMedis->pasien->user->name }}</span>
           </div>
           <div class="mb-0">
             <small class="text-muted d-block">Dokter Pemeriksa:</small>
-            <span class="fw-bold">dr. Andi Hermawan</span>
+            <span class="fw-bold">{{ $resep->rekamMedis->dokter->user->name }}</span>
           </div>
         </div>
       </div>
