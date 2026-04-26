@@ -80,6 +80,7 @@ class DokterController extends Controller
 
         return view('dokter.pasien', compact('pasiens'));
     }
+
    public function editRekamMedis($id)
     {
         $rm = RekamMedis::with(['pasien.user', 'dokter.user', 'reseps.obat'])->findOrFail($id);
@@ -240,15 +241,12 @@ class DokterController extends Controller
 
     public function editResep($id)
     {
-        // Ambil data Rekam Medis beserta relasi pasien dan resepnya
         $rm = RekamMedis::with(['pasien.user', 'reseps.obat'])->findOrFail($id);
 
-        // Keamanan: Pastikan resep ini milik dokter yang login
         if (Auth::id() !== $rm->dokter->user_id) {
             abort(403, 'Akses Ditolak.');
         }
 
-        // Ambil daftar obat untuk pilihan di dropdown
         $obats = Obat::where('stok', '>', 0)->get();
 
         return view('dokter.resep.edit', compact('rm', 'obats'));
@@ -269,14 +267,10 @@ class DokterController extends Controller
             'aturan'   => 'required|array',
         ]);
 
-        // 1. Update Diagnosa di tabel rekam_medis
         $rm->update(['diagnosa' => $request->diagnosa]);
 
-        // 2. HAPUS resep lama (Hanya yang statusnya masih 'Menunggu')
-        // Ini fitur cerdas: Mencegah dokter mengubah resep yang sedang diramu apoteker!
         $rm->reseps()->where('status', 'Menunggu')->delete();
 
-        // 3. Masukkan daftar resep yang baru diedit
         foreach ($request->obat as $key => $obat_id) {
             if ($obat_id != null) {
                 Resep::create([

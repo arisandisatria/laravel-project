@@ -19,59 +19,159 @@
 
   <div class="mb-4">
     <h2 class="h4 fw-bold text-dark mb-1">Halo, {{ Auth::user()->name }}! 👋</h2>
-    <p class="text-muted">Pantau resep aktif dan riwayat pengobatan Anda di sini.</p>
+    <p class="text-muted">Pantau jadwal pengobatan dan resep Anda di sini.</p>
   </div>
+
+  @php
+  // --- LOGIKA CERDAS UNTUK DASHBOARD ---
+  $jadwalPagi = []; $jadwalSiang = []; $jadwalMalam = [];
+  $targetMingguan = 15; // Default target
+  $logsThisWeek = 0;
+  $tepatWaktu = 0; $terlambat = 0; $terlewati = 0;
+
+  if($rmTerakhir && $rmTerakhir->reseps->isNotEmpty()) {
+  // 1. Kelompokkan Obat ke Pagi, Siang, Malam berdasarkan Aturan (Misal 3x1)
+  foreach($rmTerakhir->reseps as $resep) {
+  preg_match('/(\d+)\s*[xX]\s*\d+/', $resep->aturan, $matches);
+  $dosis = isset($matches[1]) && (int)$matches[1] > 0 ? (int)$matches[1] : 1;
+
+  if($dosis >= 1) $jadwalPagi[] = $resep;
+  if($dosis >= 3) $jadwalSiang[] = $resep;
+  if($dosis >= 2) $jadwalMalam[] = $resep;
+  }
+
+  // 2. Ambil data Log dari Database langsung di Blade (Untuk kemudahan)
+  $logHariIni = \App\Models\LogKonsumsi::where('pasien_id', $rmTerakhir->pasien_id)
+  ->where('tanggal', \Carbon\Carbon::today()->toDateString())
+  ->get();
+
+  // 3. Ambil data Log Mingguan untuk Progress Kepatuhan
+  $startOfWeek = \Carbon\Carbon::now()->startOfWeek()->toDateString();
+  $endOfWeek = \Carbon\Carbon::now()->endOfWeek()->toDateString();
+  $logMingguan = \App\Models\LogKonsumsi::where('pasien_id', $rmTerakhir->pasien_id)
+  ->whereBetween('tanggal', [$startOfWeek, $endOfWeek])
+  ->get();
+
+  $logsThisWeek = $logMingguan->count();
+  $targetMingguan = (count($jadwalPagi) + count($jadwalSiang) + count($jadwalMalam)) * 7;
+
+  // Asumsi data dummy untuk status keterlambatan
+  $tepatWaktu = $logsThisWeek > 0 ? $logsThisWeek - 1 : 0;
+  $terlambat = $logsThisWeek > 0 ? 1 : 0;
+  $terlewati = max(0, ( \Carbon\Carbon::now()->dayOfWeekIso * (count($jadwalPagi) + count($jadwalSiang) + count($jadwalMalam)) ) - $logsThisWeek);
+  }
+
+  $jamSekarang = \Carbon\Carbon::now()->hour;
+  @endphp
 
   <div class="row g-4">
     <div class="col-lg-8">
 
       <div class="card shadow-sm border-0 rounded-4 mb-4">
         <div class="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
-          <h5 class="fw-bold text-primary mb-0"><i class="bi bi-capsule me-2"></i>Daftar Obat Saat Ini</h5>
+          <h5 class="fw-bold text-primary mb-0"><i class="bi bi-alarm me-2"></i>Jadwal Minum Obat Hari Ini</h5>
           @if($rmTerakhir)
           <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#modalEResep">
             Lihat E-Resep
           </button>
           @endif
         </div>
+
         <div class="card-body p-4">
           @if($rmTerakhir && $rmTerakhir->reseps->isNotEmpty())
-          <div class="alert alert-info bg-opacity-10 border-0 border-start border-info border-4 mb-4 small">
-            Resep dari pemeriksaan tanggal <strong>{{ $rmTerakhir->created_at->format('d F Y') }}</strong> oleh <strong>{{ $rmTerakhir->dokter->user->name }}</strong>.
-          </div>
-
           <div class="timeline">
-            @php
-            // Array warna agar UI tetap cantik seperti desain aslimu
-            $colors = ['info', 'warning', 'success', 'primary'];
-            @endphp
 
-            @foreach($rmTerakhir->reseps as $index => $resep)
-            @php $color = $colors[$index % 4]; @endphp
             <div class="d-flex mb-4">
               <div class="flex-shrink-0 text-center" style="width: 70px;">
-                <span class="badge bg-{{ $color }} bg-opacity-10 text-{{ $color }} p-2 rounded-3 w-100">OBAT</span>
-                <small class="text-muted d-block mt-1">Aktif</small>
+                <span class="badge bg-info bg-opacity-10 text-info p-2 rounded-3 w-100">PAGI</span>
+                <small class="text-muted d-block mt-1">07:00</small>
               </div>
-              <div class="ms-4 p-3 bg-light rounded-4 flex-grow-1 border-start border-{{ $color }} border-4 shadow-sm">
-                <div class="d-flex justify-content-between align-items-center">
+              <div class="ms-4 p-3 bg-light rounded-4 flex-grow-1 border-start border-info border-4 shadow-sm">
+                @forelse($jadwalPagi as $resep)
+                @php
+                $sudah = $logHariIni->where('resep_id', $resep->id)->where('waktu', 'Pagi')->isNotEmpty();
+                @endphp
+                <div class="d-flex justify-content-between align-items-center mb-2 pb-2 {{ !$loop->last ? 'border-bottom' : '' }}">
                   <div>
-                    <h6 class="fw-bold mb-1">{{ optional($resep->obat)->nama_obat ?? 'Obat Dihapus' }}</h6>
+                    <h6 class="fw-bold mb-1">{{ optional($resep->obat)->nama_obat }}</h6>
                     <p class="small text-muted mb-0">{{ $resep->jumlah }} {{ optional($resep->obat)->satuan }} • {{ $resep->aturan }}</p>
                   </div>
-                  <span class="badge bg-light text-dark border rounded-pill px-3 py-2">
-                    Ikuti Aturan
-                  </span>
+                  @if($sudah)
+                  <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2"><i class="bi bi-check-circle me-1"></i> Sudah Diminum</span>
+                  @elseif($jamSekarang > 10)
+                  <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3 py-2"><i class="bi bi-x-circle me-1"></i> Terlewati</span>
+                  @else
+                  <span class="text-muted small"><i class="bi bi-clock me-1"></i> Belum Waktunya</span>
+                  @endif
                 </div>
+                @empty
+                <p class="small text-muted mb-0">Tidak ada jadwal pagi.</p>
+                @endforelse
               </div>
             </div>
-            @endforeach
+
+            <div class="d-flex mb-4">
+              <div class="flex-shrink-0 text-center" style="width: 70px;">
+                <span class="badge bg-warning bg-opacity-10 text-warning p-2 rounded-3 w-100">SIANG</span>
+                <small class="text-muted d-block mt-1">13:00</small>
+              </div>
+              <div class="ms-4 p-3 bg-light rounded-4 flex-grow-1 border-start border-warning border-4 shadow-sm">
+                @forelse($jadwalSiang as $resep)
+                @php
+                $sudah = $logHariIni->where('resep_id', $resep->id)->where('waktu', 'Siang')->isNotEmpty();
+                @endphp
+                <div class="d-flex justify-content-between align-items-center mb-2 pb-2 {{ !$loop->last ? 'border-bottom' : '' }}">
+                  <div>
+                    <h6 class="fw-bold mb-1">{{ optional($resep->obat)->nama_obat }}</h6>
+                    <p class="small text-muted mb-0">{{ $resep->jumlah }} {{ optional($resep->obat)->satuan }} • {{ $resep->aturan }}</p>
+                  </div>
+                  @if($sudah)
+                  <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2"><i class="bi bi-check-circle me-1"></i> Sudah Diminum</span>
+                  @elseif($jamSekarang > 15)
+                  <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3 py-2"><i class="bi bi-x-circle me-1"></i> Terlewati</span>
+                  @else
+                  <span class="text-muted small"><i class="bi bi-clock me-1"></i> Belum Waktunya</span>
+                  @endif
+                </div>
+                @empty
+                <p class="small text-muted mb-0">Tidak ada jadwal siang.</p>
+                @endforelse
+              </div>
+            </div>
+
+            <div class="d-flex">
+              <div class="flex-shrink-0 text-center" style="width: 70px;">
+                <span class="badge bg-dark bg-opacity-10 text-dark p-2 rounded-3 w-100">MALAM</span>
+                <small class="text-muted d-block mt-1">20:00</small>
+              </div>
+              <div class="ms-4 p-3 bg-light bg-opacity-25 rounded-4 flex-grow-1 border-start border-success border-4 shadow-sm">
+                @forelse($jadwalMalam as $resep)
+                @php
+                $sudah = $logHariIni->where('resep_id', $resep->id)->where('waktu', 'Malam')->isNotEmpty();
+                @endphp
+                <div class="d-flex justify-content-between align-items-center mb-2 pb-2 {{ !$loop->last ? 'border-bottom' : '' }}">
+                  <div>
+                    <h6 class="fw-bold mb-1">{{ optional($resep->obat)->nama_obat }}</h6>
+                    <p class="small text-muted mb-0">{{ $resep->jumlah }} {{ optional($resep->obat)->satuan }} • {{ $resep->aturan }}</p>
+                  </div>
+                  @if($sudah)
+                  <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2"><i class="bi bi-check-circle me-1"></i> Sudah Diminum</span>
+                  @elseif($jamSekarang > 23)
+                  <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3 py-2"><i class="bi bi-x-circle me-1"></i> Terlewati</span>
+                  @else
+                  <span class="text-muted small"><i class="bi bi-clock me-1"></i> Belum Waktunya</span>
+                  @endif
+                </div>
+                @empty
+                <p class="small text-muted mb-0">Tidak ada jadwal malam.</p>
+                @endforelse
+              </div>
+            </div>
+
           </div>
           @else
           <div class="text-center py-5">
-            <i class="bi bi-emoji-smile fs-1 text-muted mb-3 d-block"></i>
-            <h6 class="fw-bold text-muted">Tidak Ada Resep Aktif</h6>
-            <p class="small text-muted mb-0">Anda tidak memiliki obat yang sedang dalam masa konsumsi saat ini.</p>
+            <p class="text-muted mb-0">Anda tidak memiliki jadwal minum obat hari ini.</p>
           </div>
           @endif
         </div>
@@ -79,27 +179,27 @@
 
       <div class="card border-0 shadow-sm rounded-4">
         <div class="card-body p-4">
-          <h6 class="fw-bold mb-3">Statistik Layanan Resep Anda</h6>
+          <h6 class="fw-bold mb-3">Progress Kepatuhan Mingguan</h6>
           <div class="d-flex justify-content-between mb-2">
-            <span class="small text-muted">Total Keseluruhan Resep</span>
-            <span class="small fw-bold text-primary">{{ $resepSelesai }}/{{ $totalResep }} Selesai Ditebus</span>
+            <span class="small text-muted">Senin - Minggu ini</span>
+            <span class="small fw-bold text-primary">{{ $logsThisWeek }}/{{ $targetMingguan }} Sesi Selesai</span>
           </div>
           <div class="progress rounded-pill" style="height: 12px;">
-            @php $persen = $totalResep > 0 ? ($resepSelesai / $totalResep) * 100 : 0; @endphp
-            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: {{ $persen }}%"></div>
+            @php $persenKepatuhan = $targetMingguan > 0 ? min(100, ($logsThisWeek / $targetMingguan) * 100) : 0; @endphp
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: {{ $persenKepatuhan }}%"></div>
           </div>
           <div class="mt-3 d-flex gap-2">
             <div class="bg-light rounded-3 p-2 flex-fill text-center border">
-              <small class="text-muted d-block">Selesai (Diambil)</small>
-              <span class="fw-bold text-success">{{ $resepSelesai }}</span>
+              <small class="text-muted d-block">Tepat Waktu</small>
+              <span class="fw-bold text-success">{{ $tepatWaktu }}</span>
             </div>
             <div class="bg-light rounded-3 p-2 flex-fill text-center border">
-              <small class="text-muted d-block">Sedang Diproses</small>
-              <span class="fw-bold text-warning">{{ $resepMenunggu }}</span>
+              <small class="text-muted d-block">Terlambat</small>
+              <span class="fw-bold text-warning">{{ $terlambat }}</span>
             </div>
             <div class="bg-light rounded-3 p-2 flex-fill text-center border">
-              <small class="text-muted d-block">Total Resep</small>
-              <span class="fw-bold text-primary">{{ $totalResep }}</span>
+              <small class="text-muted d-block">Terlewati</small>
+              <span class="fw-bold text-danger">{{ $terlewati }}</span>
             </div>
           </div>
         </div>
@@ -111,7 +211,7 @@
       <div class="card shadow-sm border-0 rounded-4 bg-primary text-white mb-4">
         <div class="card-body p-4">
           <h6 class="fw-bold">Ingin Bertanya?</h6>
-          <p class="small text-white-50">Hubungi apoteker kami jika Anda memiliki keraguan tentang dosis obat.</p>
+          <p class="small text-white-50">Hubungi apotek kami jika Anda memiliki keraguan tentang dosis obat.</p>
           <a href="https://wa.me/628123456789" target="_blank" class="btn btn-light btn-sm w-100 fw-bold rounded-pill py-2 text-primary">
             <i class="bi bi-whatsapp me-2"></i>Hubungi Apoteker
           </a>
@@ -148,8 +248,8 @@
       <div class="modal-content border-0 shadow rounded-4">
         <div class="modal-body p-5">
           <div class="text-center mb-4">
-            <h5 class="fw-bold mb-0 text-primary"><i class="bi bi-heart-pulse-fill me-2"></i>KLINIK OBATKU</h5>
-            <p class="small text-muted mb-0">Jl. Teknologi Medis No. 12, Jember</p>
+            <h5 class="fw-bold mb-0">KLINIK OBATKU DIGITAL</h5>
+            <p class="small text-muted">Jl. Sehat Selalu No. 123, Indonesia</p>
             <hr class="border-2 opacity-50">
           </div>
 
@@ -166,7 +266,7 @@
 
           <div class="mb-4">
             <span class="text-muted small d-block">Nama Pasien:</span>
-            <span class="fw-bold">{{ Auth::user()->name }} (PAS-{{ str_pad($pasien->id, 3, '0', STR_PAD_LEFT) }})</span>
+            <span class="fw-bold">{{ Auth::user()->name }}</span>
           </div>
 
           <div class="bg-light p-3 rounded-3 mb-4">
@@ -190,5 +290,4 @@
     </div>
   </div>
   @endif
-
 </x-app-layout>

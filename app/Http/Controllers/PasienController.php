@@ -85,15 +85,29 @@ class PasienController extends Controller
         return back()->with('success', 'Hebat! Anda telah meminum obat untuk jadwal ' . $request->waktu);
     }
 
-    public function riwayatResep()
+    public function riwayatResep(Request $request)
     {
         $pasien = Pasien::where('user_id', Auth::id())->firstOrFail();
 
-        $riwayatRekamMedis = RekamMedis::with(['dokter.user', 'reseps.obat'])
+        $query = RekamMedis::with(['dokter.user', 'reseps.obat'])
                             ->where('pasien_id', $pasien->id)
-                            ->whereHas('reseps')
-                            ->latest()
-                            ->paginate(10);
+                            ->whereHas('reseps');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('diagnosa', 'like', "%{$search}%")
+                  ->orWhere('keluhan_utama', 'like', "%{$search}%")
+                  ->orWhereHas('dokter.user', function($qDokter) use ($search) {
+                      $qDokter->where('name', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('reseps.obat', function($qObat) use ($search) {
+                      $qObat->where('nama_obat', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $riwayatRekamMedis = $query->latest()->paginate(10)->withQueryString();
 
         return view('pasien.riwayat', compact('riwayatRekamMedis'));
     }

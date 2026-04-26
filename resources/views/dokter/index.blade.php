@@ -99,12 +99,6 @@
               </thead>
               <tbody>
                 @forelse ($resepTerbaru as $resep)
-
-                @empty
-                <tr>
-                  <td colspan="5" class="text-center text-muted py-4">Belum ada resep yang diterbitkan.</td>
-                </tr>
-                @endforelse
                 <tr>
                   <td class="fw-semibold text-primary">{{ $resep->kode_resep }}</td>
                   <td>{{ $resep->rekamMedis->pasien->user_name ?? 'Data Pasien Hilang' }}</td>
@@ -122,6 +116,11 @@
                     </button>
                   </td>
                 </tr>
+                @empty
+                <tr>
+                  <td colspan="5" class="text-center text-muted py-4">Belum ada resep yang diterbitkan.</td>
+                </tr>
+                @endforelse
               </tbody>
             </table>
           </div>
@@ -168,12 +167,6 @@
             </div>
             @endforelse
           </div>
-          {{-- <div class="alert alert-info bg-opacity-10 border-0 border-start border-info shadow-sm" role="alert">
-            <div class="small">
-              <i class="bi bi-info-circle-fill me-1"></i>
-              <strong>Info:</strong> Stok <strong>Amoxicillin</strong> hampir habis. Mohon tanyakan ketersediaan ke apotek sebelum meresepkan.
-            </div>
-          </div> --}}
         </div>
       </div>
     </div>

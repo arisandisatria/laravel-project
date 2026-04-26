@@ -85,7 +85,7 @@
                     <p class="small text-muted mb-0">Lanjutkan ke halaman penulisan E-Resep setelah menyimpan pemeriksaan ini.</p>
                   </div>
                   <div class="form-check form-switch fs-4 mb-0">
-                    <input class="form-check-input cursor-pointer" type="checkbox" id="buatResep" name="buat_resep" value="1" checked>
+                    <input class="form-check-input cursor-pointer" type="checkbox" id="resepkan_obat" value="1" name="resepkan_obat" checked>
                   </div>
                 </div>
               </div>
