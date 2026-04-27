@@ -20,7 +20,7 @@
     <div class="card-body p-4 d-flex align-items-center justify-content-between position-relative">
       <div style="z-index: 1;">
         <h4 class="fw-bold mb-1">Selamat Bertugas, {{ Auth::user()->name }}! 🩺</h4>
-        <p class="mb-0 text-white-50 small">Anda memiliki <span class="text-white fw-bold fs-5">3</span> pasien di antrean resep saat ini.</p>
+        <p class="mb-0 text-white-50 small">Anda memiliki <span class="text-white fw-bold fs-5">{{ $antreanMenunggu }}</span> pasien di antrean periksa saat ini.</p>
       </div>
       <div class="d-none d-md-block opacity-25">
         <i class="bi bi-heart-pulse-fill" style="font-size: 5rem;"></i>
@@ -172,6 +172,7 @@
     </div>
   </div>
 
+  @foreach($resepTerbaru as $resep)
   <div class="modal fade" id="modalLihatResep-{{ $resep->id }}" tabindex=" -1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow rounded-4">
@@ -204,4 +205,5 @@
       </div>
     </div>
   </div>
+  @endforeach
 </x-app-layout>

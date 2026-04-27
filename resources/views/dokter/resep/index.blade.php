@@ -26,7 +26,7 @@
         <div class="col-md-4">
           <div class="input-group gap-2">
             <span class="input-group-text bg-transparent border-0 pe-0"><i class="bi bi-search text-muted"></i></span>
-            <input type="text" name="search" value="{{ request('search') }}" class="form-control border-0 bg-light rounded-3 shadow-none" placeholder="Cari nama pasien atau ID resep...">
+            <input type="text" name="search" value="{{ request('search') }}" class="form-control border-0 rounded-3 shadow-none" placeholder="Cari nama pasien atau ID resep...">
           </div>
         </div>
         <div class="col-md-3">
@@ -41,7 +41,7 @@
           <input type="date" name="tanggal" value="{{ request('tanggal') }}" class="form-control border-0 bg-light rounded-3 shadow-none small">
         </div>
         <div class="col-md-2 d-flex gap-2">
-          <button type="submit" class="btn btn-dark w-100 rounded-3 small">Filter</button>
+          <button type="submit" class="btn btn-dark w-100 rounded-3 small">Cari</button>
           @if(request('search') || request('status') || request('tanggal'))
           <a href="{{ route('dokter.resep.index') }}" class="btn btn-light rounded-3 small"><i class="bi bi-arrow-clockwise"></i></a>
           @endif

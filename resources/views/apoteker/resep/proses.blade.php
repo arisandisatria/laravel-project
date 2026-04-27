@@ -80,6 +80,11 @@
               <i class="bi bi-check-circle-fill d-block fs-3 mb-2"></i>
               Resep diserahkan dan stok obat telah dipotong.
             </div>
+            <div class="col-md-12 mt-4">
+              <a href="{{ route('permintaan-resep.index') }}" class="btn btn-outline-secondary w-100 rounded-pill py-2">
+                Kembali
+              </a>
+            </div>
             @endif
 
           </form>

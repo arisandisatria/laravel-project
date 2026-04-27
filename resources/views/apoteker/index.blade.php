@@ -20,7 +20,7 @@
     <div class="card-body p-4 d-flex align-items-center justify-content-between position-relative">
       <div style="z-index: 1;">
         <h4 class="fw-bold mb-1">Halo, Apt. {{ Auth::user()->name }}! 💊</h4>
-        <p class="mb-0 text-white-50 small">Ada <span class="text-white fw-bold fs-5">5</span> resep baru yang perlu divalidasi hari ini.</p>
+        <p class="mb-0 text-white-50 small">Ada <span class="text-white fw-bold fs-5">{{ $resepBaru }}</span> resep baru yang perlu divalidasi hari ini.</p>
       </div>
       <div class="d-none d-md-block opacity-25">
         <i class="bi bi-capsule-pill" style="font-size: 5rem;"></i>

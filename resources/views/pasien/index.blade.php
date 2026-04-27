@@ -15,6 +15,28 @@
       position: relative;
     }
 
+    .pulse-alert {
+      animation: pulse-animation 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse-animation {
+      0% {
+        box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7);
+        transform: scale(1);
+      }
+
+      50% {
+        box-shadow: 0 0 0 10px rgba(13, 110, 253, 0);
+        transform: scale(1.05);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
+        transform: scale(1);
+      }
+    }
+    }
+
   </style>
 
   <div class="mb-4">
@@ -95,9 +117,10 @@
                   <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2"><i class="bi bi-check-circle me-1"></i> Sudah Diminum</span>
                   @elseif($jamSekarang > 10)
                   <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3 py-2"><i class="bi bi-x-circle me-1"></i> Terlewati</span>
-                  @else
-                  <span class="text-muted small"><i class="bi bi-clock me-1"></i> Belum Waktunya</span>
-                  @endif
+                  @elseif($jamSekarang >= 6 && $jamSekarang <= 10) <span class="badge bg-primary text-white rounded-pill px-3 py-2 shadow-sm pulse-alert d-inline-block"><i class="bi bi-capsule me-1"></i> Waktunya Minum Obat</span>
+                    @else
+                    <span class="text-muted small"><i class="bi bi-clock me-1"></i> Belum Waktunya</span>
+                    @endif
                 </div>
                 @empty
                 <p class="small text-muted mb-0">Tidak ada jadwal pagi.</p>
@@ -124,9 +147,10 @@
                   <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2"><i class="bi bi-check-circle me-1"></i> Sudah Diminum</span>
                   @elseif($jamSekarang > 15)
                   <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3 py-2"><i class="bi bi-x-circle me-1"></i> Terlewati</span>
-                  @else
-                  <span class="text-muted small"><i class="bi bi-clock me-1"></i> Belum Waktunya</span>
-                  @endif
+                  @elseif($jamSekarang >= 11 && $jamSekarang <= 15) <span class="badge bg-primary text-white rounded-pill px-3 py-2 shadow-sm pulse-alert d-inline-block"><i class="bi bi-capsule me-1"></i> Waktunya Minum Obat</span>
+                    @else
+                    <span class="text-muted small"><i class="bi bi-clock me-1"></i> Belum Waktunya</span>
+                    @endif
                 </div>
                 @empty
                 <p class="small text-muted mb-0">Tidak ada jadwal siang.</p>
@@ -153,9 +177,10 @@
                   <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2"><i class="bi bi-check-circle me-1"></i> Sudah Diminum</span>
                   @elseif($jamSekarang > 23)
                   <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3 py-2"><i class="bi bi-x-circle me-1"></i> Terlewati</span>
-                  @else
-                  <span class="text-muted small"><i class="bi bi-clock me-1"></i> Belum Waktunya</span>
-                  @endif
+                  @elseif($jamSekarang >= 18 && $jamSekarang <= 23) <span class="badge bg-primary text-white rounded-pill px-3 py-2 shadow-sm pulse-alert d-inline-block"><i class="bi bi-capsule me-1"></i> Waktunya Minum Obat</span>
+                    @else
+                    <span class="text-muted small"><i class="bi bi-clock me-1"></i> Belum Waktunya</span>
+                    @endif
                 </div>
                 @empty
                 <p class="small text-muted mb-0">Tidak ada jadwal malam.</p>

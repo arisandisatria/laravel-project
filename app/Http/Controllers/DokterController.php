@@ -98,13 +98,12 @@ class DokterController extends Controller
     {
         $rm = RekamMedis::findOrFail($id);
 
-        // Keamanan
         if (Auth::id() !== $rm->dokter->user_id) {
             return back()->with('error', 'Akses Ditolak: Anda tidak dapat mengedit rekam medis ini.');
         }
 
         $request->validate([
-           'keluhan_utama' => 'required|string',
+            'keluhan_utama' => 'required|string',
             'diagnosa'      => 'required|string',
             'riwayat_penyakit' => 'nullable|string',
             'tensi' => 'nullable|string',

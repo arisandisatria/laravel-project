@@ -14,10 +14,8 @@ class PasienController extends Controller
 {
     public function index()
     {
-        // 1. Ambil data pasien yang sedang login
         $pasien = Pasien::where('user_id', Auth::id())->firstOrFail();
 
-        // 2. Cari Rekam Medis TERAKHIR yang resepnya sudah ditebus (Selesai/Disiapkan)
         $rmTerakhir = RekamMedis::with(['dokter.user', 'reseps.obat'])
                         ->where('pasien_id', $pasien->id)
                         ->whereHas('reseps', function($q) {
@@ -26,7 +24,6 @@ class PasienController extends Controller
                         ->latest()
                         ->first();
 
-        // 3. Hitung Statistik Resep (Adaptasi dari Progress Kepatuhan)
         $totalResep = Resep::whereHas('rekamMedis', function($q) use ($pasien) {
             $q->where('pasien_id', $pasien->id);
         })->count();
@@ -47,21 +44,18 @@ class PasienController extends Controller
         $pasien = Pasien::where('user_id', Auth::id())->firstOrFail();
         $hariIni = Carbon::today()->toDateString();
 
-        // 1. Ambil Obat Aktif (Asumsi: Resep yang dibuat 7 hari terakhir dan berstatus Selesai dari Apotek)
         $resepAktif = Resep::with(['obat', 'rekamMedis'])
             ->whereHas('rekamMedis', function($q) use ($pasien) {
                 $q->where('pasien_id', $pasien->id);
             })
             ->where('status', 'Selesai')
-            ->whereDate('created_at', '>=', Carbon::today()->subDays(7)) // Berlaku seminggu
+            ->whereDate('created_at', '>=', Carbon::today()->subDays(7))
             ->get();
 
-        // 2. Ambil Log Minum Obat HARI INI
         $logHariIni = LogKonsumsi::where('pasien_id', $pasien->id)
             ->where('tanggal', $hariIni)
             ->get();
 
-        // 3. Ambil Log keseluruhan untuk sidebar kanan
         $logRiwayat = LogKonsumsi::with('resep.obat')
             ->where('pasien_id', $pasien->id)
             ->latest()

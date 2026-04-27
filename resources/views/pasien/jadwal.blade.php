@@ -1,4 +1,17 @@
 <x-app-layout>
+
+  <style>
+    .transition-hover {
+      transition: all 0.2s ease;
+    }
+
+    .transition-hover:hover {
+      background-color: rgba(25, 135, 84, 0.5);
+      transform: translateY(-2px);
+    }
+
+  </style>
+
   <div class="mb-4">
     <h2 class="h4 fw-bold text-dark mb-1">Manajemen Pengobatan</h2>
     <p class="text-muted">Kelola jadwal konsumsi obat harian dan pantau progress pemulihan Anda.</p>
@@ -40,6 +53,8 @@
       $hariKe = \Carbon\Carbon::parse($resep->created_at)->startOfDay()->diffInDays(\Carbon\Carbon::today()) + 1;
       $persenProgress = min(100, ($hariKe / $durasiHari) * 100);
       $sisaHari = max(0, $durasiHari - $hariKe);
+
+      $jamSekarang = \Carbon\Carbon::now()->hour;
       @endphp
 
       <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
@@ -188,15 +203,4 @@
     </div>
   </div>
 
-  <style>
-    .transition-hover {
-      transition: all 0.2s ease;
-    }
-
-    .transition-hover:hover {
-      background-color: rgba(25, 135, 84, 0.05);
-      transform: translateY(-2px);
-    }
-
-  </style>
 </x-app-layout>

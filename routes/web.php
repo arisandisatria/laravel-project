@@ -31,6 +31,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         abort(403, 'Role tidak valid.');
     })->name('dashboard');
 
+    // PASIEN
     Route::middleware(['role:pasien'])->group(function () {
 
         Route::get('/dashboard-pasien', [\App\Http\Controllers\PasienController::class, 'index'])->name('pasien.dashboard');

@@ -5,7 +5,6 @@
     --bg-light: #f8f9fa;
   }
 
-  /* Sidebar Styling */
   #sidebar {
     width: var(--sidebar-width);
     height: 100vh;
@@ -43,7 +42,6 @@
     border-right: 4px solid var(--primary-color);
   }
 
-  /* Topbar Adjustments */
   .topbar {
     height: 70px;
     background: #fff;
@@ -98,7 +96,7 @@
     <a href="{{ url('/kelola-resep') }}" class="nav-link {{ request()->is('kelola-resep*') ? 'active' : '' }}">
       <i class="bi bi-file-earmark-medical"></i> Kelola Resep
     </a>
-    <a href="{{ url('/manajemen-pasien') }}" class="nav-link {{ request()->is('manajemen-pasien*') ? 'active' : '' }}">
+    <a href="{{ route('dokter.pasien') }}" class="nav-link {{ request()->routeIs('dokter.pasien', 'dokter.rekam-medis.periksa', 'dokter.rekam-medis.edit') ? 'active' : '' }}">
       <i class="bi bi-people"></i> Manajemen Pasien
     </a>
     @endif
