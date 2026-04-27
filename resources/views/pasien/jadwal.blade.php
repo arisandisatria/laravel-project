@@ -6,8 +6,17 @@
     }
 
     .transition-hover:hover {
-      background-color: rgba(25, 135, 84, 0.5);
       transform: translateY(-2px);
+    }
+
+    .btn-outline-danger.transition-hover:hover {
+      background-color: rgba(220, 53, 69, 0.1) !important;
+      color: #dc3545 !important;
+    }
+
+    .btn-outline-primary.transition-hover:hover {
+      background-color: rgba(13, 110, 253, 0.1) !important;
+      color: #0d6efd !important;
     }
 
   </style>
@@ -88,119 +97,282 @@
             </div>
           </div>
 
-          <div class="row g-3">
+          {{-- <div class="row g-3">
             @if($tampilPagi)
             <div class="col-md-{{ 12 / $dosisHarian }}">
-              @if($sudahPagi)
-              <div class="border border-success bg-success bg-opacity-10 text-success rounded-4 p-3 text-center h-100 d-flex flex-column justify-content-center">
-                <i class="bi bi-check-circle-fill fs-4 mb-1"></i>
-                <h6 class="fw-bold mb-0 small">Pagi (07:00)</h6>
-                <small style="font-size: 0.7rem;">Sudah Diminum</small>
-              </div>
-              @else
-              <form action="{{ route('pasien.jadwal.tandai') }}" method="POST" class="h-100">
-                @csrf
-                <input type="hidden" name="resep_id" value="{{ $resep->id }}">
-                <input type="hidden" name="waktu" value="Pagi">
-                <button type="submit" class="btn btn-outline-success border-success-subtle w-100 p-3 rounded-4 text-center h-100 transition-hover">
-                  <i class="bi bi-brightness-alt-high fs-4 d-block mb-1"></i>
-                  <h6 class="fw-bold mb-0 small">Pagi (07:00)</h6>
-                  <small class="text-muted" style="font-size: 0.7rem;">Klik Jika Sudah</small>
-                </button>
-              </form>
-              @endif
-            </div>
-            @endif
-
-            @if($tampilSiang)
-            <div class="col-md-{{ 12 / $dosisHarian }}">
-              @if($sudahSiang)
-              <div class="border border-success bg-success bg-opacity-10 text-success rounded-4 p-3 text-center h-100 d-flex flex-column justify-content-center">
-                <i class="bi bi-check-circle-fill fs-4 mb-1"></i>
-                <h6 class="fw-bold mb-0 small">Siang (13:00)</h6>
-                <small style="font-size: 0.7rem;">Sudah Diminum</small>
-              </div>
-              @else
-              <form action="{{ route('pasien.jadwal.tandai') }}" method="POST" class="h-100">
-                @csrf
-                <input type="hidden" name="resep_id" value="{{ $resep->id }}">
-                <input type="hidden" name="waktu" value="Siang">
-                <button type="submit" class="btn btn-outline-success border-success-subtle w-100 p-3 rounded-4 text-center h-100 transition-hover">
-                  <i class="bi bi-sun fs-4 d-block mb-1"></i>
-                  <h6 class="fw-bold mb-0 small">Siang (13:00)</h6>
-                  <small class="text-muted" style="font-size: 0.7rem;">Klik Jika Sudah</small>
-                </button>
-              </form>
-              @endif
-            </div>
-            @endif
-
-            @if($tampilMalam)
-            <div class="col-md-{{ 12 / $dosisHarian }}">
-              @if($sudahMalam)
-              <div class="border border-success bg-success bg-opacity-10 text-success rounded-4 p-3 text-center h-100 d-flex flex-column justify-content-center">
-                <i class="bi bi-check-circle-fill fs-4 mb-1"></i>
-                <h6 class="fw-bold mb-0 small">Malam (20:00)</h6>
-                <small style="font-size: 0.7rem;">Sudah Diminum</small>
-              </div>
-              @else
-              <form action="{{ route('pasien.jadwal.tandai') }}" method="POST" class="h-100">
-                @csrf
-                <input type="hidden" name="resep_id" value="{{ $resep->id }}">
-                <input type="hidden" name="waktu" value="Malam">
-                <button type="submit" class="btn btn-outline-success border-success-subtle w-100 p-3 rounded-4 text-center h-100 transition-hover">
-                  <i class="bi bi-moon-stars fs-4 d-block mb-1"></i>
-                  <h6 class="fw-bold mb-0 small">Malam (20:00)</h6>
-                  <small class="text-muted" style="font-size: 0.7rem;">Klik Jika Sudah</small>
-                </button>
-              </form>
-              @endif
-            </div>
-            @endif
-
+          @if($sudahPagi)
+          <div class="border border-success bg-success bg-opacity-10 text-success rounded-4 p-3 text-center h-100 d-flex flex-column justify-content-center">
+            <i class="bi bi-check-circle-fill fs-4 mb-1"></i>
+            <h6 class="fw-bold mb-0 small">Pagi (07:00)</h6>
+            <small style="font-size: 0.7rem;">Sudah Diminum</small>
           </div>
+          @else
+          <form action="{{ route('pasien.jadwal.tandai') }}" method="POST" class="h-100">
+            @csrf
+            <input type="hidden" name="resep_id" value="{{ $resep->id }}">
+            <input type="hidden" name="waktu" value="Pagi">
+            <button type="submit" class="btn btn-outline-success border-success-subtle w-100 p-3 rounded-4 text-center h-100 transition-hover">
+              <i class="bi bi-brightness-alt-high fs-4 d-block mb-1"></i>
+              <h6 class="fw-bold mb-0 small">Pagi (07:00)</h6>
+              <small class="text-muted" style="font-size: 0.7rem;">Klik Jika Sudah</small>
+            </button>
+          </form>
+          @endif
         </div>
-      </div>
-      @empty
-      <div class="card border-0 shadow-sm rounded-4 text-center py-5">
-        <div class="mb-3"><i class="bi bi-emoji-smile fs-1 text-primary opacity-50"></i></div>
-        <h6 class="fw-bold text-dark">Tidak Ada Jadwal</h6>
-        <p class="text-muted small mb-0">Anda tidak memiliki resep obat yang harus diminum hari ini.</p>
-      </div>
-      @endforelse
-    </div>
+        @endif
 
-    <div class="col-lg-4">
-      <div class="card border-0 shadow-sm rounded-4 h-100">
-        <div class="card-header bg-white border-0 pt-4 px-4">
-          <h6 class="fw-bold mb-0"><i class="bi bi-clipboard2-pulse me-2 text-primary"></i>Log Harian Anda</h6>
+        @if($tampilSiang)
+        <div class="col-md-{{ 12 / $dosisHarian }}">
+          @if($sudahSiang)
+          <div class="border border-success bg-success bg-opacity-10 text-success rounded-4 p-3 text-center h-100 d-flex flex-column justify-content-center">
+            <i class="bi bi-check-circle-fill fs-4 mb-1"></i>
+            <h6 class="fw-bold mb-0 small">Siang (13:00)</h6>
+            <small style="font-size: 0.7rem;">Sudah Diminum</small>
+          </div>
+          @else
+          <form action="{{ route('pasien.jadwal.tandai') }}" method="POST" class="h-100">
+            @csrf
+            <input type="hidden" name="resep_id" value="{{ $resep->id }}">
+            <input type="hidden" name="waktu" value="Siang">
+            <button type="submit" class="btn btn-outline-success border-success-subtle w-100 p-3 rounded-4 text-center h-100 transition-hover">
+              <i class="bi bi-sun fs-4 d-block mb-1"></i>
+              <h6 class="fw-bold mb-0 small">Siang (13:00)</h6>
+              <small class="text-muted" style="font-size: 0.7rem;">Klik Jika Sudah</small>
+            </button>
+          </form>
+          @endif
         </div>
-        <div class="card-body p-0">
-          <ul class="list-group list-group-flush mt-2">
-            @forelse($logRiwayat as $log)
-            <li class="list-group-item border-0 px-4 py-3 border-bottom border-light">
-              <div class="d-flex justify-content-between align-items-center">
-                <div>
-                  <h6 class="fw-bold mb-1 text-dark small">{{ optional($log->resep->obat)->nama_obat }}</h6>
-                  <span class="text-muted" style="font-size: 0.7rem;">
-                    <i class="bi bi-calendar3 me-1"></i> {{ \Carbon\Carbon::parse($log->tanggal)->format('d M') }} •
-                    <span class="fw-medium text-primary">{{ $log->waktu }}</span>
-                  </span>
-                </div>
-                <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2" style="font-size: 0.7rem;">
-                  <i class="bi bi-check2"></i> Selesai
-                </span>
-              </div>
-            </li>
-            @empty
-            <li class="list-group-item border-0 text-center py-5">
-              <p class="text-muted small mb-0">Belum ada catatan.</p>
-            </li>
-            @endforelse
-          </ul>
+        @endif
+
+        @if($tampilMalam)
+        <div class="col-md-{{ 12 / $dosisHarian }}">
+          @if($sudahMalam)
+          <div class="border border-success bg-success bg-opacity-10 text-success rounded-4 p-3 text-center h-100 d-flex flex-column justify-content-center">
+            <i class="bi bi-check-circle-fill fs-4 mb-1"></i>
+            <h6 class="fw-bold mb-0 small">Malam (20:00)</h6>
+            <small style="font-size: 0.7rem;">Sudah Diminum</small>
+          </div>
+          @else
+          <form action="{{ route('pasien.jadwal.tandai') }}" method="POST" class="h-100">
+            @csrf
+            <input type="hidden" name="resep_id" value="{{ $resep->id }}">
+            <input type="hidden" name="waktu" value="Malam">
+            <button type="submit" class="btn btn-outline-success border-success-subtle w-100 p-3 rounded-4 text-center h-100 transition-hover">
+              <i class="bi bi-moon-stars fs-4 d-block mb-1"></i>
+              <h6 class="fw-bold mb-0 small">Malam (20:00)</h6>
+              <small class="text-muted" style="font-size: 0.7rem;">Klik Jika Sudah</small>
+            </button>
+          </form>
+          @endif
         </div>
+        @endif
+
+      </div> --}}
+      <div class="row g-3">
+
+        @if($tampilPagi)
+        <div class="col-md-{{ 12 / $dosisHarian }}">
+          @if($sudahPagi)
+          <div class="border border-success bg-success bg-opacity-10 text-success rounded-4 p-3 text-center h-100 d-flex flex-column justify-content-center">
+            <i class="bi bi-check-circle-fill fs-4 mb-1"></i>
+            <h6 class="fw-bold mb-0 small">Pagi</h6>
+            <small style="font-size: 0.7rem;">Sudah Diminum</small>
+          </div>
+          @elseif($jamSekarang < 6) <div class="border border-secondary bg-light text-secondary rounded-4 p-3 text-center h-100 d-flex flex-column justify-content-center" style="opacity: 0.6; cursor: not-allowed;">
+            <i class="bi bi-lock-fill fs-4 mb-1"></i>
+            <h6 class="fw-bold mb-0 small">Pagi</h6>
+            <small style="font-size: 0.7rem;">Belum Waktunya</small>
+        </div>
+        @elseif($jamSekarang > 10)
+        <form action="{{ route('pasien.jadwal.tandai') }}" method="POST" class="h-100">
+          @csrf
+          <input type="hidden" name="resep_id" value="{{ $resep->id }}">
+          <input type="hidden" name="waktu" value="Pagi">
+          <button type="submit" class="btn btn-outline-danger border-danger-subtle w-100 p-3 rounded-4 text-center h-100 transition-hover">
+            <i class="bi bi-exclamation-triangle fs-4 d-block mb-1"></i>
+            <h6 class="fw-bold mb-0 small">Pagi</h6>
+            <small style="font-size: 0.7rem;">Terlewati (Tetap Minum)</small>
+          </button>
+        </form>
+        @else
+        <form action="{{ route('pasien.jadwal.tandai') }}" method="POST" class="h-100">
+          @csrf
+          <input type="hidden" name="resep_id" value="{{ $resep->id }}">
+          <input type="hidden" name="waktu" value="Pagi">
+          <button type="submit" class="btn btn-outline-primary border-primary-subtle w-100 p-3 rounded-4 text-center h-100 transition-hover pulse-alert">
+            <i class="bi bi-brightness-alt-high fs-4 d-block mb-1"></i>
+            <h6 class="fw-bold mb-0 small">Pagi</h6>
+            <small class="fw-bold" style="font-size: 0.7rem;">Minum Sekarang!</small>
+          </button>
+        </form>
+        @endif
       </div>
+      @endif
+
+      @if($tampilSiang)
+      <div class="col-md-{{ 12 / $dosisHarian }}">
+        @if($sudahSiang)
+        <div class="border border-success bg-success bg-opacity-10 text-success rounded-4 p-3 text-center h-100 d-flex flex-column justify-content-center">
+          <i class="bi bi-check-circle-fill fs-4 mb-1"></i>
+          <h6 class="fw-bold mb-0 small">Siang</h6>
+          <small style="font-size: 0.7rem;">Sudah Diminum</small>
+        </div>
+        @elseif($jamSekarang < 11) <div class="border border-secondary bg-light text-secondary rounded-4 p-3 text-center h-100 d-flex flex-column justify-content-center" style="opacity: 0.6; cursor: not-allowed;">
+          <i class="bi bi-lock-fill fs-4 mb-1"></i>
+          <h6 class="fw-bold mb-0 small">Siang</h6>
+          <small style="font-size: 0.7rem;">Belum Waktunya</small>
+      </div>
+      @elseif($jamSekarang > 15)
+      <form action="{{ route('pasien.jadwal.tandai') }}" method="POST" class="h-100">
+        @csrf
+        <input type="hidden" name="resep_id" value="{{ $resep->id }}">
+        <input type="hidden" name="waktu" value="Siang">
+        <button type="submit" class="btn btn-outline-danger border-danger-subtle w-100 p-3 rounded-4 text-center h-100 transition-hover">
+          <i class="bi bi-exclamation-triangle fs-4 d-block mb-1"></i>
+          <h6 class="fw-bold mb-0 small">Siang</h6>
+          <small style="font-size: 0.7rem;">Terlewati (Tetap Minum)</small>
+        </button>
+      </form>
+      @else
+      <form action="{{ route('pasien.jadwal.tandai') }}" method="POST" class="h-100">
+        @csrf
+        <input type="hidden" name="resep_id" value="{{ $resep->id }}">
+        <input type="hidden" name="waktu" value="Siang">
+        <button type="submit" class="btn btn-outline-primary border-primary-subtle w-100 p-3 rounded-4 text-center h-100 transition-hover pulse-alert">
+          <i class="bi bi-sun fs-4 d-block mb-1"></i>
+          <h6 class="fw-bold mb-0 small">Siang</h6>
+          <small class="fw-bold" style="font-size: 0.7rem;">Minum Sekarang!</small>
+        </button>
+      </form>
+      @endif
     </div>
+    @endif
+
+    @if($tampilMalam)
+    <div class="col-md-{{ 12 / $dosisHarian }}">
+      @if($sudahMalam)
+      <div class="border border-success bg-success bg-opacity-10 text-success rounded-4 p-3 text-center h-100 d-flex flex-column justify-content-center">
+        <i class="bi bi-check-circle-fill fs-4 mb-1"></i>
+        <h6 class="fw-bold mb-0 small">Malam</h6>
+        <small style="font-size: 0.7rem;">Sudah Diminum</small>
+      </div>
+      @elseif($jamSekarang < 18) <div class="border border-secondary bg-light text-secondary rounded-4 p-3 text-center h-100 d-flex flex-column justify-content-center" style="opacity: 0.6; cursor: not-allowed;">
+        <i class="bi bi-lock-fill fs-4 mb-1"></i>
+        <h6 class="fw-bold mb-0 small">Malam</h6>
+        <small style="font-size: 0.7rem;">Belum Waktunya</small>
+    </div>
+    @elseif($jamSekarang > 23)
+    <form action="{{ route('pasien.jadwal.tandai') }}" method="POST" class="h-100">
+      @csrf
+      <input type="hidden" name="resep_id" value="{{ $resep->id }}">
+      <input type="hidden" name="waktu" value="Malam">
+      <button type="submit" class="btn btn-outline-danger border-danger-subtle w-100 p-3 rounded-4 text-center h-100 transition-hover">
+        <i class="bi bi-exclamation-triangle fs-4 d-block mb-1"></i>
+        <h6 class="fw-bold mb-0 small">Malam</h6>
+        <small style="font-size: 0.7rem;">Terlewati (Tetap Minum)</small>
+      </button>
+    </form>
+    @else
+    <form action="{{ route('pasien.jadwal.tandai') }}" method="POST" class="h-100">
+      @csrf
+      <input type="hidden" name="resep_id" value="{{ $resep->id }}">
+      <input type="hidden" name="waktu" value="Malam">
+      <button type="submit" class="btn btn-outline-primary border-primary-subtle w-100 p-3 rounded-4 text-center h-100 transition-hover pulse-alert">
+        <i class="bi bi-moon-stars fs-4 d-block mb-1"></i>
+        <h6 class="fw-bold mb-0 small">Malam</h6>
+        <small class="fw-bold" style="font-size: 0.7rem;">Minum Sekarang!</small>
+      </button>
+    </form>
+    @endif
+  </div>
+  @endif
+
+  </div>
+  </div>
+  </div>
+  @empty
+  <div class="card border-0 shadow-sm rounded-4 text-center py-5">
+    <div class="mb-3"><i class="bi bi-emoji-smile fs-1 text-primary opacity-50"></i></div>
+    <h6 class="fw-bold text-dark">Tidak Ada Jadwal</h6>
+    <p class="text-muted small mb-0">Anda tidak memiliki resep obat yang harus diminum hari ini.</p>
+  </div>
+  @endforelse
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card border-0 shadow-sm rounded-4 h-100">
+      <div class="card-header bg-white border-0 pt-4 px-4">
+        <h6 class="fw-bold mb-0"><i class="bi bi-clipboard2-pulse me-2 text-primary"></i>Log Harian Anda</h6>
+      </div>
+      <div class="card-body p-0">
+        {{-- <ul class="list-group list-group-flush mt-2">
+          @forelse($logRiwayat as $log)
+          <li class="list-group-item border-0 px-4 py-3 border-bottom border-light">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="fw-bold mb-1 text-dark small">{{ optional($log->resep->obat)->nama_obat }}</h6>
+        <span class="text-muted" style="font-size: 0.7rem;">
+          <i class="bi bi-calendar3 me-1"></i> {{ \Carbon\Carbon::parse($log->tanggal)->format('d M') }} •
+          <span class="fw-medium text-primary">{{ $log->waktu }}</span>
+        </span>
+      </div>
+      <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2" style="font-size: 0.7rem;">
+        <i class="bi bi-check2"></i> Selesai
+      </span>
+    </div>
+    </li>
+    @empty
+    <li class="list-group-item border-0 text-center py-5">
+      <p class="text-muted small mb-0">Belum ada catatan.</p>
+    </li>
+    @endforelse
+    </ul> --}}
+    <ul class="list-group list-group-flush mt-2">
+      @forelse($logRiwayat as $log)
+      @php
+      $jamKonsumsi = \Carbon\Carbon::parse($log->created_at)->hour;
+      $isTerlewati = false;
+
+      if ($log->waktu === 'Pagi' && $jamKonsumsi > 10) {
+      $isTerlewati = true;
+      } elseif ($log->waktu === 'Siang' && $jamKonsumsi > 15) {
+      $isTerlewati = true;
+      } elseif ($log->waktu === 'Malam' && $jamKonsumsi > 23) {
+      $isTerlewati = true;
+      }
+      @endphp
+
+      <li class="list-group-item border-0 px-4 py-3 border-bottom border-light">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="fw-bold mb-1 text-dark small">{{ optional($log->resep->obat)->nama_obat }}</h6>
+            <span class="text-muted" style="font-size: 0.7rem;">
+              <i class="bi bi-calendar3 me-1"></i> {{ \Carbon\Carbon::parse($log->tanggal)->format('d M') }} •
+              <span class="fw-medium text-primary">{{ $log->waktu }}</span>
+            </span>
+          </div>
+
+          @if($isTerlewati)
+          <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3 py-2" style="font-size: 0.7rem;">
+            <i class="bi bi-exclamation-triangle"></i> Terlewati
+          </span>
+          @else
+          <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2" style="font-size: 0.7rem;">
+            <i class="bi bi-check2"></i> Tepat Waktu
+          </span>
+          @endif
+
+        </div>
+      </li>
+      @empty
+      <li class="list-group-item border-0 text-center py-5">
+        <p class="text-muted small mb-0">Belum ada catatan.</p>
+      </li>
+      @endforelse
+    </ul>
+  </div>
+  </div>
+  </div>
   </div>
 
 </x-app-layout>
