@@ -57,7 +57,7 @@
       <i class="bi bi-exclamation-triangle-fill me-3 fs-5 mt-1"></i>
       <div>
         @foreach ($errors->all() as $error)
-        <div class="mb-1">{{ $error }}</div>
+        <div>{{ $error }}</div>
         @endforeach
       </div>
     </div>
