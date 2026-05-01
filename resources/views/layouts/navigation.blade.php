@@ -5,6 +5,12 @@
     --bg-light: #f8f9fa;
   }
 
+  #main-content {
+    margin-left: var(--sidebar-width);
+    transition: all 0.3s ease-in-out;
+    min-height: 100vh;
+  }
+
   #sidebar {
     width: var(--sidebar-width);
     height: 100vh;
@@ -15,6 +21,24 @@
     border-right: 1px solid #e9ecef;
     z-index: 1000;
     transition: all 0.3s;
+  }
+
+  #sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease-in-out;
+  }
+
+  #sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
   }
 
   .sidebar-header {
@@ -55,28 +79,32 @@
 
   @media (max-width: 992px) {
     #sidebar {
-      margin-left: calc(-1 * var(--sidebar-width));
-    }
-
-    #main-content {
-      margin-left: 0;
+      transform: translateX(-100%);
     }
 
     #sidebar.active {
-      margin-left: 0;
+      transform: translateX(0);
+    }
+
+    #main-content {
+      margin-left: 0 !important;
     }
   }
 
 </style>
 
+<div id="sidebar-overlay"></div>
 <nav id="sidebar">
-  <div class="sidebar-header">
+  <div class="sidebar-header d-flex justify-content-between">
     <a class="navbar-brand fw-bold text-primary fs-4 d-flex align-items-center gap-2 text-decoration-none" href="{{ route('dashboard') }}">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-capsule" viewBox="0 0 16 16">
         <path d="M1.828 8.9 8.9 1.827a4 4 0 1 1 5.657 5.657l-7.07 7.071A4 4 0 1 1 1.827 8.9Zm9.128.771 2.893-2.893a3 3 0 1 0-4.243-4.242L6.713 5.429l4.243 4.242Z" />
       </svg>
       Obatku
     </a>
+    <button type="button" class="btn d-lg-none" id="sidebarCloseBtn">
+      <i class="bi bi-x-lg fs-3"></i>
+    </button>
   </div>
 
   <div class="nav flex-column mt-3">
@@ -151,3 +179,22 @@
     </div>
   </div>
 </header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.getElementById('sidebar');
+    const sidebarBtn = document.getElementById('sidebarCollapse');
+    const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    function toggleSidebar() {
+      sidebar.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }
+
+    sidebarBtn.addEventListener('click', toggleSidebar);
+    overlay.addEventListener('click', toggleSidebar);
+    sidebarCloseBtn.addEventListener('click', toggleSidebar)
+  });
+
+</script>

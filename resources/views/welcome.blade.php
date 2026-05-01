@@ -12,6 +12,11 @@
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
   <style>
+    html,
+    body {
+      overflow-x: hidden;
+    }
+
     body {
       font-family: 'Inter', sans-serif;
     }
@@ -100,30 +105,47 @@
       z-index: 0;
     }
 
+    .hero-spacing {
+      padding-top: 160px;
+      padding-bottom: 120px;
+    }
+
+    @media (max-width: 767.98px) {
+      .hero-spacing {
+        padding-top: 130px;
+        padding-bottom: 60px;
+      }
+    }
+
   </style>
 </head>
 <body class="bg-light d-flex flex-column min-vh-100">
 
   <nav class="navbar navbar-expand-lg navbar-light navbar-glass border-bottom shadow-sm fixed-top">
     <div class="container">
-      <a class="navbar-brand fw-bold text-primary fs-4 d-flex align-items-center gap-2" href="{{route('index')}}">
-        <i class="bi bi-capsule fs-3"></i> Obatku
+      <a class="navbar-brand fw-bold text-primary fs-5 fs-md-4 d-flex align-items-center gap-1 gap-md-2" href="{{route('index')}}">
+        <i class="bi bi-capsule fs-4 fs-md-3"></i> Obatku
       </a>
-      <div class="d-flex gap-2">
+      <div class="d-flex gap-1 gap-md-2">
         @guest
-        <a href="{{route('login')}}" class="btn btn-outline-primary px-4 rounded-pill fw-medium">Masuk</a>
-        <a href="{{route('register')}}" class="btn btn-primary px-4 shadow-sm rounded-pill fw-medium">Daftar</a>
+        <a href="{{route('login')}}" class="btn btn-outline-primary px-3 px-md-4 rounded-pill fw-medium">Masuk</a>
+        <a href="{{route('register')}}" class="btn btn-primary px-3 px-md-4 shadow-sm rounded-pill fw-medium">Daftar</a>
         @endguest
 
         @auth
-        <a href="{{ route('dashboard') }}" class="btn btn-primary px-4 shadow-sm rounded-pill fw-medium">Ke Dashboard</a>
-        <a href="{{ route('logout') }}" class="btn btn-outline-danger px-4 rounded-pill fw-medium">Keluar</a>
+        <a href="{{ route('dashboard') }}" class="btn btn-primary px-3 px-md-4 shadow-sm rounded-pill fw-medium"><span class="d-none d-sm-inline">Ke</span> Dashboard</a>
+        <form method="POST" action="{{ route('logout') }}" class="m-0 p-0">
+          @csrf
+          <a href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();" class="btn btn-outline-danger px-3 px-md-4 rounded-pill fw-medium">
+            Keluar
+          </a>
+        </form>
         @endauth
       </div>
     </div>
   </nav>
 
-  <section class="hero-bg flex-grow-1 position-relative" style="padding-top: 160px; padding-bottom: 120px;">
+  <section class="hero-bg flex-grow-1 position-relative hero-spacing">
     <div class="blob-1"></div>
     <div class="blob-2"></div>
 
@@ -144,8 +166,8 @@
 
       <div class="d-flex gap-3" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300">
         @guest
-        <a href="{{route('login')}}" class="btn btn-primary btn-lg px-5 shadow-sm rounded-pill fw-bold">Mulai Sekarang</a>
-        <a href="#fitur" class="btn btn-white btn-lg px-4 border rounded-pill text-dark fw-medium shadow-sm hover-bg-light">Pelajari Fitur</a>
+        <a href="{{route('login')}}" class="btn btn-primary px-4 px-md-5 py-2 py-md-3 fs-6 fs-md-3 shadow-sm rounded-pill fw-bold">Mulai Sekarang</a>
+        <a href="#fitur" class="btn btn-white px-3 px-md-4 py-2 py-md-3 fs-6 fs-md-3 border rounded-pill text-dark fw-medium shadow-sm hover-bg-light">Pelajari Fitur</a>
         @endguest
 
         @auth
@@ -253,7 +275,7 @@
               <div class="rounded-circle bg-success" style="width: 12px; height: 12px;"></div>
               <span class="text-white-50 small ms-2 fw-medium">Dashboard Preview</span>
             </div>
-            <div class="card-body p-0 bg-white" style="height: 400px; display: flex; align-items: center; justify-content: center;">
+            <div class="card-body p-0 bg-white" style="aspect-ratio: 16/9; max-height: 400px; display: flex; align-items: center; justify-content: center;">
               <img class="object-fit-contain w-100 h-100" src="{{asset('img/dashboard-preview.png')}}" alt="Dashboard Preview" onerror="this.style.display='none'">
             </div>
           </div>
@@ -278,8 +300,8 @@
       @endauth
     </div>
 
-    <i class="bi bi-capsule position-absolute text-white opacity-10" style="font-size: 15rem; top: -50px; left: -50px; transform: rotate(-30deg);"></i>
-    <i class="bi bi-heart-pulse position-absolute text-white opacity-10" style="font-size: 12rem; bottom: -50px; right: 50px;"></i>
+    <i class="bi bi-capsule position-absolute text-white opacity-25" style="font-size: 15rem; top: -50px; left: -50px; transform: rotate(-30deg);"></i>
+    <i class="bi bi-heart-pulse position-absolute text-white opacity-25" style="font-size: 12rem; bottom: -50px; right: 50px;"></i>
   </section>
 
   <footer class="bg-white py-4 mt-auto">
@@ -294,11 +316,11 @@
 
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>
-    // Inisialisasi animasi AOS
     AOS.init({
-      once: true, // Animasi hanya berjalan sekali saat di-scroll ke bawah
-      offset: 50, // Muncul sedikit lebih cepat sebelum elemen masuk layar
-    });
+      once: true
+      , offset: 50
+      , disable: 'mobile'
+    , });
 
   </script>
 </body>

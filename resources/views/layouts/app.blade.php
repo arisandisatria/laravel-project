@@ -16,7 +16,7 @@
 
   @include('layouts.navigation')
 
-  <main id="main-content" class="d-flex flex-column min-vh-100" style="margin-left: 260px; transition: all 0.3s;">
+  <main id="main-content" class="d-flex flex-column min-vh-100">
 
     @isset($header)
     <div class="bg-white border-bottom py-3 px-4 mb-4">
@@ -29,23 +29,14 @@
     </div>
 
   </main>
-
   <footer class="bg-white py-4 border-top mt-auto">
+
     <div class="container-fluid px-4 text-center text-muted small">
+
       &copy; {{ date('Y') }} Obatku. Membangun Ekosistem Kesehatan Digital.
+
     </div>
+
   </footer>
-
-  <script>
-    document.getElementById('sidebarCollapse').addEventListener('click', function() {
-      document.getElementById('sidebar').classList.toggle('active');
-
-      if (window.innerWidth <= 992) {
-        let sidebar = document.getElementById('sidebar');
-        sidebar.style.marginLeft = sidebar.style.marginLeft === '0px' ? '-260px' : '0px';
-      }
-    });
-
-  </script>
 </body>
 </html>

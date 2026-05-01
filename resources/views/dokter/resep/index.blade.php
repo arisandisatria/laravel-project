@@ -42,9 +42,6 @@
         </div>
         <div class="col-md-2 d-flex gap-2">
           <button type="submit" class="btn btn-dark w-100 rounded-3 small">Cari</button>
-          @if(request('search') || request('status') || request('tanggal'))
-          <a href="{{ route('dokter.resep.index') }}" class="btn btn-light rounded-3 small"><i class="bi bi-arrow-clockwise"></i></a>
-          @endif
         </div>
       </form>
     </div>
