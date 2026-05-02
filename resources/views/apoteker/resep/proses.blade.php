@@ -8,7 +8,7 @@
 
   <div class="row g-4 align-items-start">
 
-    <div class="col-lg-4">
+    <div class="col-lg-4 d-flex d-md-block flex-column-reverse">
       <div class="card border-0 shadow-sm rounded-4 mb-4">
         <div class="card-body p-4">
           <h6 class="fw-bold mb-3 border-bottom pb-2 text-primary">Informasi Resep</h6>

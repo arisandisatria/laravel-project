@@ -28,9 +28,6 @@
           @endif
         </div>
       </form>
-      <div class="d-flex justify-content-between align-items-end mb-3">
-        <h6 class="fw-bold mb-0"><i class="bi bi-archive me-2 text-primary"></i>Arsip Pengobatan Anda</h6>
-      </div>
 
 
       @forelse($riwayatRekamMedis as $rm)

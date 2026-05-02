@@ -6,12 +6,12 @@
 
   </style>
 
-  <div class="d-flex justify-content-between align-items-center mb-4">
+  <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-4 gap-3">
     <div>
       <h2 class="h4 fw-bold text-dark mb-0">Dokter Panel</h2>
       <p class="text-muted small mb-0">Pantau aktivitas medis dan resep pasien hari ini.</p>
     </div>
-    <span class="text-muted small bg-white px-3 py-2 rounded-pill shadow-sm border">
+    <span class="text-muted small bg-white px-3 py-2 rounded-pill shadow-sm border w-100 w-sm-auto text-center">
       <i class="bi bi-calendar3 me-1"></i> {{ date('d F Y') }}
     </span>
   </div>
@@ -29,7 +29,7 @@
   </div>
 
   <div class="row g-4 mb-4">
-    <div class="col-sm-6 col-xl-3">
+    <div class="col-6 col-xl-3">
       <div class="card shadow-sm border-0 rounded-4 h-100 border-4 border-bottom border-primary">
         <div class="card-body p-4 text-center text-xl-start">
           <div class="bg-primary bg-opacity-10 text-primary rounded-3 p-3 text-center mb-3 d-inline-block">
@@ -41,7 +41,7 @@
       </div>
     </div>
 
-    <div class="col-sm-6 col-xl-3">
+    <div class="col-6 col-xl-3">
       <div class="card shadow-sm border-0 rounded-4 h-100">
         <div class="card-body p-4 text-center text-xl-start">
           <div class="bg-success bg-opacity-10 text-success rounded-3 p-3 text-center mb-3 d-inline-block">
@@ -53,7 +53,7 @@
       </div>
     </div>
 
-    <div class="col-sm-6 col-xl-3">
+    <div class="col-6 col-xl-3">
       <div class="card shadow-sm border-0 rounded-4 h-100">
         <div class="card-body p-4 text-center text-xl-start">
           <div class="bg-warning bg-opacity-10 text-warning rounded-3 p-3 text-center mb-3 d-inline-block">
@@ -65,7 +65,7 @@
       </div>
     </div>
 
-    <div class="col-sm-6 col-xl-3">
+    <div class="col-6 col-xl-3">
       <div class="card shadow-sm border-0 rounded-4 h-100">
         <div class="card-body p-4 text-center text-xl-start">
           <div class="bg-info bg-opacity-10 text-info rounded-3 p-3 text-center mb-3 d-inline-block">
@@ -81,20 +81,20 @@
   <div class="row g-4">
     <div class="col-lg-8">
       <div class="card shadow-sm border-0 rounded-4 h-100">
-        <div class="card-header bg-white border-bottom-0 pt-4 pb-0 d-flex justify-content-between align-items-center">
+        <div class="card-header bg-white border-bottom-0 pt-4 pb-0 d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2">
           <h5 class="fw-bold text-dark mb-0">Aktivitas Resep Terbaru</h5>
-          <a href="{{ url('/kelola-resep') }}" class="btn btn-sm btn-link text-decoration-none">Lihat Semua</a>
+          <a href="{{ url('/kelola-resep') }}" class="btn btn-sm btn-link text-decoration-none px-0">Lihat Semua</a>
         </div>
         <div class="card-body p-4">
           <div class="table-responsive">
-            <table class="table align-middle mb-0">
+            <table class="table align-middle mb-0 text-nowrap">
               <thead class="table-light text-muted small">
                 <tr>
                   <th class="border-0 rounded-start">ID Resep</th>
                   <th class="border-0">Nama Pasien</th>
                   <th class="border-0">Waktu</th>
                   <th class="border-0">Status</th>
-                  <th class="border-0 rounded-end text-end">Aksi</th>
+                  <th class="border-0 rounded-end text-end pe-3 pe-md-4">Aksi</th>
                 </tr>
               </thead>
               <tbody>
@@ -110,7 +110,7 @@
                     <span class="badge bg-warning bg-opacity-10 text-warning rounded-pill px-3">{{ $resep->status }}</span>
                     @endif
                   </td>
-                  <td class="text-end">
+                  <td class="text-end pe-3 pe-md-4">
                     <button class="btn btn-sm btn-light border-0" data-bs-toggle="modal" data-bs-target="#modalLihatResep-{{ $resep->id }}">
                       <i class="bi bi-eye"></i>
                     </button>
@@ -136,7 +136,7 @@
         <div class="card-body p-4">
           <div class="d-grid gap-3">
             <a href="{{ url('/kelola-resep/create') }}" class="btn btn-outline-primary text-start p-3 rounded-4 d-flex align-items-center text-decoration-none">
-              <div class="bg-primary text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="bi bi-pencil-square"></i></div>
+              <div class="bg-primary text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; flex-shrink: 0;"><i class="bi bi-pencil-square"></i></div>
               <div>
                 <h6 class="fw-bold mb-0">Tulis Resep Baru</h6>
                 <span class="small text-muted">Input diagnosa & obat pasien</span>
@@ -144,7 +144,7 @@
             </a>
 
             <a href="{{ url('/manajemen-pasien') }}" class="btn btn-outline-dark text-start p-3 rounded-4 d-flex align-items-center text-decoration-none border-dashed">
-              <div class="bg-dark text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="bi bi-person-lines-fill"></i></div>
+              <div class="bg-dark text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; flex-shrink: 0;"><i class="bi bi-person-lines-fill"></i></div>
               <div>
                 <h6 class="fw-bold mb-0">Riwayat Pasien</h6>
                 <span class="small opacity-75">Cek rekam medis terdahulu</span>
@@ -173,7 +173,7 @@
   </div>
 
   @foreach($resepTerbaru as $resep)
-  <div class="modal fade" id="modalLihatResep-{{ $resep->id }}" tabindex=" -1" aria-hidden="true">
+  <div class="modal fade" id="modalLihatResep-{{ $resep->id }}" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow rounded-4">
         <div class="modal-header border-0 pt-4 px-4">
@@ -192,12 +192,12 @@
           <h6 class="fw-bold small mb-2 text-uppercase text-muted">Daftar Obat</h6>
           <ul class="list-group list-group-flush border rounded-3">
             @foreach($resep->rekamMedis->reseps as $itemObat)
-            <li class="list-group-item d-flex justify-content-between align-items-center small p-3">
+            <li class="list-group-item d-flex justify-content-between align-items-start small p-3 gap-2">
               <div>
                 <strong>{{ optional($itemObat->obat)->nama_obat ?? 'Obat Dihapus' }}</strong>
                 <div class="text-muted">{{ $itemObat->aturan }}</div>
               </div>
-              <span class="badge bg-primary rounded-pill">{{ $itemObat->jumlah }} {{ optional($itemObat->obat)->satuan }}</span>
+              <span class="badge bg-primary rounded-pill mt-1">{{ $itemObat->jumlah }} {{ optional($itemObat->obat)->satuan }}</span>
             </li>
             @endforeach
           </ul>

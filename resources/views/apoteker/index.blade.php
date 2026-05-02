@@ -6,7 +6,7 @@
 
   </style>
 
-  <div class="d-flex justify-content-between align-items-center mb-4">
+  <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-4 gap-3">
     <div>
       <h2 class="h4 fw-bold text-dark mb-0">Apoteker Panel</h2>
       <p class="text-muted small mb-0">Kelola persediaan obat dan validasi resep masuk.</p>
@@ -29,7 +29,7 @@
   </div>
 
   <div class="row g-4 mb-4">
-    <div class="col-sm-6 col-xl-3">
+    <div class="col-6 col-xl-3">
       <div class="card shadow-sm border-0 rounded-4 h-100">
         <div class="card-body p-4">
           <div class="bg-warning bg-opacity-10 text-warning rounded-3 p-3 text-center mb-3 d-inline-block">
@@ -41,7 +41,7 @@
       </div>
     </div>
 
-    <div class="col-sm-6 col-xl-3">
+    <div class="col-6 col-xl-3">
       <div class="card shadow-sm border-0 rounded-4 h-100">
         <div class="card-body p-4">
           <div class="bg-success bg-opacity-10 text-success rounded-3 p-3 text-center mb-3 d-inline-block">
@@ -53,7 +53,7 @@
       </div>
     </div>
 
-    <div class="col-sm-6 col-xl-3">
+    <div class="col-6 col-xl-3">
       <div class="card shadow-sm border-0 rounded-4 h-100 border-start border-danger border-4">
         <div class="card-body p-4">
           <div class="bg-danger bg-opacity-10 text-danger rounded-3 p-3 text-center mb-3 d-inline-block">
@@ -65,7 +65,7 @@
       </div>
     </div>
 
-    <div class="col-sm-6 col-xl-3">
+    <div class="col-6 col-xl-3">
       <div class="card shadow-sm border-0 rounded-4 h-100">
         <div class="card-body p-4">
           <div class="bg-info bg-opacity-10 text-info rounded-3 p-3 text-center mb-3 d-inline-block">
@@ -81,13 +81,13 @@
   <div class="row g-4">
     <div class="col-lg-8">
       <div class="card shadow-sm border-0 rounded-4 h-100">
-        <div class="card-header bg-white border-bottom-0 pt-4 pb-0 d-flex justify-content-between align-items-center">
+        <div class="card-header bg-white border-bottom-0 pt-4 pb-0 d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2">
           <h5 class="fw-bold text-dark mb-0">Antrean Resep Masuk</h5>
-          <a href="{{ url('/permintaan-resep') }}" class="btn btn-sm btn-link link-underline link-underline-opacity-0 link-underline-opacity-100-hover link-offset-2">Lihat Semua</a>
+          <a href="{{ url('/permintaan-resep') }}" class="btn btn-sm btn-link link-underline link-underline-opacity-0 link-underline-opacity-100-hover link-offset-2 px-0">Lihat Semua</a>
         </div>
         <div class="card-body p-4">
           <div class="table-responsive">
-            <table class="table align-middle mb-0">
+            <table class="table align-middle mb-0 text-nowrap">
               <thead class="table-light text-muted small">
                 <tr>
                   <th class="border-0 rounded-start">ID Resep</th>
@@ -122,14 +122,14 @@
         <div class="card-body p-4">
           <div class="d-grid gap-3">
             <a href="{{ url('/stok-obat/create') }}" class="btn btn-outline-primary text-start p-3 rounded-4 d-flex align-items-center text-decoration-none">
-              <div class="bg-primary text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="bi bi-plus-circle"></i></div>
+              <div class="bg-primary text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; flex-shrink: 0;"><i class="bi bi-plus-circle"></i></div>
               <div>
                 <h6 class="fw-bold mb-0">Tambah Stok Obat</h6>
                 <span class="small text-muted">Input stok barang masuk</span>
               </div>
             </a>
             <a href="{{ url('/stok-obat') }}" class="btn btn-outline-dark text-start p-3 rounded-4 d-flex align-items-center text-decoration-none border-dashed">
-              <div class="bg-dark text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="bi bi-list-check"></i></div>
+              <div class="bg-dark text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; flex-shrink: 0;"><i class="bi bi-list-check"></i></div>
               <div>
                 <h6 class="fw-bold mb-0">Cek Stok Obat</h6>
                 <span class="small opacity-75">Lihat semua data & harga</span>
@@ -139,9 +139,9 @@
 
           <hr class="my-4 text-muted">
 
+          <h6 class="fw-bold text-dark mb-3">Peringatan Stok</h6>
           <div class="d-flex flex-column gap-2">
             @forelse ($peringatanStok as $stok)
-            <h6 class="fw-bold text-dark mb-3">Peringatan Stok</h6>
             <div class="alert alert-danger border-0 shadow-sm rounded-4 small mb-0">
               <i class="bi bi-exclamation-triangle-fill me-2"></i>
               {{ $stok->nama_obat }} sisa <strong>{{ $stok->stok }} {{ $stok->satuan }}</strong>. Segera buat pesanan baru.

@@ -10,26 +10,28 @@
 
   </style>
 
-  <div class="d-flex justify-content-between align-items-center mb-4">
+  <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-4 gap-3">
     <div>
       <h2 class="h4 fw-bold text-dark mb-0">Kelola Resep</h2>
       <p class="text-muted small mb-0">Kelola dan pantau status resep yang telah Anda terbitkan.</p>
     </div>
-    <a href="{{ url('/kelola-resep/create') }}" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold">
-      <i class="bi bi-plus-lg me-2"></i>Buat Resep Baru
-    </a>
+    <div class="d-grid d-sm-block w-100" style="max-width: 100%; sm:max-width: max-content;">
+      <a href="{{ url('/kelola-resep/create') }}" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold">
+        <i class="bi bi-plus-lg me-2"></i>Buat Resep Baru
+      </a>
+    </div>
   </div>
 
   <div class="card border-0 shadow-sm rounded-4 mb-4">
     <div class="card-body p-3">
       <form action="{{ route('dokter.resep.index') }}" method="GET" class="row g-3 align-items-center">
-        <div class="col-md-4">
+        <div class="col-12 col-md-4">
           <div class="input-group gap-2">
             <span class="input-group-text bg-transparent border-0 pe-0"><i class="bi bi-search text-muted"></i></span>
             <input type="text" name="search" value="{{ request('search') }}" class="form-control border-0 rounded-3 shadow-none" placeholder="Cari nama pasien atau ID resep...">
           </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
           <select name="status" class="form-select border-0 bg-light rounded-3 shadow-none small">
             <option {{ request('status') == 'Semua Status' ? 'selected' : '' }}>Semua Status</option>
             <option {{ request('status') == 'Menunggu Obat' ? 'selected' : '' }}>Menunggu Obat</option>
@@ -37,10 +39,10 @@
             <option {{ request('status') == 'Selesai' ? 'selected' : '' }}>Selesai</option>
           </select>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-md-3">
           <input type="date" name="tanggal" value="{{ request('tanggal') }}" class="form-control border-0 bg-light rounded-3 shadow-none small">
         </div>
-        <div class="col-md-2 d-flex gap-2">
+        <div class="col-12 col-md-2">
           <button type="submit" class="btn btn-dark w-100 rounded-3 small">Cari</button>
         </div>
       </form>
@@ -49,14 +51,14 @@
 
   <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
     <div class="table-responsive">
-      <table class="table align-middle mb-0">
+      <table class="table align-middle mb-0 text-nowrap">
         <thead class="bg-light">
           <tr>
-            <th class="ps-4 py-3 border-0 text-muted small text-uppercase">ID Resep</th>
+            <th class="ps-3 ps-md-4 py-3 border-0 text-muted small text-uppercase">ID Resep</th>
             <th class="border-0 text-muted small text-uppercase">Pasien</th>
             <th class="border-0 text-muted small text-uppercase">Tanggal & Waktu</th>
             <th class="border-0 text-muted small text-uppercase">Status</th>
-            <th class="border-0 text-muted small text-uppercase text-center">Aksi</th>
+            <th class="border-0 text-muted small text-uppercase text-center pe-3 pe-md-4">Aksi</th>
           </tr>
         </thead>
         <tbody>
@@ -65,12 +67,12 @@
           $firstResep = $rm->reseps->first();
           @endphp
           <tr>
-            <td class="ps-4">
+            <td class="ps-3 ps-md-4">
               <span class="fw-bold text-primary">{{ $firstResep->kode_resep ?? '#RSP-'.$rm->id }}</span>
             </td>
             <td>
               <div class="d-flex align-items-center">
-                <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=random" class="rounded-circle me-2" width="32">
+                <img src="https://ui-avatars.com/api/?name={{ urlencode($rm->pasien->user->name) }}&background=random" class="rounded-circle me-2" width="32">
                 <div>
                   <h6 class="mb-0 fw-bold small">{{ $rm->pasien->user->name }}</h6>
                   <small class="text-muted" style="font-size: 0.7rem;">{{ $rm->pasien->jenis_kelamin }}, {{ \Carbon\Carbon::parse($rm->pasien->tanggal_lahir)->age }} Thn</small>
@@ -92,7 +94,7 @@
               <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill small"><i class="bi bi-check-circle me-1"></i> Selesai</span>
               @endif
             </td>
-            <td class="text-center">
+            <td class="text-center pe-3 pe-md-4">
               @if($firstResep->status === 'Selesai')
               <div class="text-muted small"><em>Tidak ada aksi</em></div>
               @else
@@ -119,14 +121,16 @@
       </table>
     </div>
 
+    @if($rekamMedis->hasPages())
     <div class="card-footer bg-white border-top-0 py-3">
-      <div class="d-flex justify-content-between align-items-center">
-        <small class="text-muted">Menampilkan {{ $rekamMedis->firstItem() ?? 0 }} - {{ $rekamMedis->lastItem() ?? 0 }} dari {{ $rekamMedis->total() }} resep</small>
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+        <small class="text-muted text-center text-md-start">Menampilkan {{ $rekamMedis->firstItem() ?? 0 }} - {{ $rekamMedis->lastItem() ?? 0 }} dari {{ $rekamMedis->total() }} resep</small>
         <nav>
           {{ $rekamMedis->links('pagination::bootstrap-5') }}
         </nav>
       </div>
     </div>
+    @endif
   </div>
 
   @foreach($rekamMedis as $rm)
@@ -149,12 +153,12 @@
           <h6 class="fw-bold small mb-2 text-uppercase text-muted">Daftar Obat</h6>
           <ul class="list-group list-group-flush border rounded-3 mb-4">
             @foreach($rm->reseps as $resep)
-            <li class="list-group-item d-flex justify-content-between align-items-center small p-3">
+            <li class="list-group-item d-flex flex-column flex-sm-row justify-content-between align-items-start small p-3 gap-2">
               <div>
                 <strong>{{ $resep->obat->nama_obat ?? 'Obat Dihapus' }}</strong>
                 <div class="text-muted">{{ $resep->aturan }}</div>
               </div>
-              <span class="badge bg-primary rounded-pill">{{ $resep->jumlah }} {{ $resep->obat->satuan ?? 'Item' }}</span>
+              <span class="badge bg-primary rounded-pill mt-1 mt-sm-0">{{ $resep->jumlah }} {{ $resep->obat->satuan ?? 'Item' }}</span>
             </li>
             @endforeach
           </ul>

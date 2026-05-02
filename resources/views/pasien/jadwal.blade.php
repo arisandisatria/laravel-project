@@ -26,7 +26,7 @@
     <p class="text-muted">Kelola jadwal konsumsi obat harian dan pantau progress pemulihan Anda.</p>
   </div>
 
-  <div class="d-inline-flex flex-wrap gap-2 mb-4 bg-white p-2 rounded-4 shadow-sm">
+  <div class="d-flex flex-wrap mx-auto mx-md-0 gap-2 mb-4 bg-white p-2 rounded-4 shadow-sm" style="width: fit-content;">
     <a href="{{ route('pasien.jadwal') }}" class="btn btn-primary rounded-pill px-4 fw-medium shadow-sm flex-grow-1 text-center">
       <i class="bi bi-calendar2-check me-2"></i>Jadwal
     </a>
@@ -96,11 +96,9 @@
             </div>
           </div>
 
-          <!-- Ubah gap menjadi g-2 agar jarak antar kotak di HP tidak terlalu memakan tempat -->
           <div class="row g-2">
 
             @if($tampilPagi)
-            <!-- Pertahankan col ini agar selalu berjajar ke samping di semua layar -->
             <div class="col-{{ 12 / $dosisHarian }}">
               @if($sudahPagi)
               <div class="border border-success bg-success bg-opacity-10 text-success rounded-4 px-1 py-2 p-md-3 h-100 d-flex flex-column justify-content-center align-items-center text-center gap-1">
@@ -114,7 +112,7 @@
                 <i class="bi bi-lock-fill fs-4 mb-0"></i>
                 <div>
                   <h6 class="fw-bold mb-0" style="font-size: 0.8rem;">Pagi</h6>
-                  <small style="font-size: 0.65rem;">Belum Waktu</small>
+                  <small style="font-size: 0.65rem;">Belum Waktunya</small>
                 </div>
             </div>
             @elseif($jamSekarang > 10)
@@ -126,7 +124,6 @@
                 <i class="bi bi-exclamation-triangle fs-4 mb-0"></i>
                 <div>
                   <h6 class="fw-bold mb-0" style="font-size: 0.8rem;">Pagi</h6>
-                  <!-- Pemenggalan kata disengaja agar rapi di layar sempit -->
                   <small style="font-size: 0.65rem; line-height: 1.1;" class="d-block mt-1">Terlewati<br>(Tetap Minum)</small>
                 </div>
               </button>
@@ -162,7 +159,7 @@
               <i class="bi bi-lock-fill fs-4 mb-0"></i>
               <div>
                 <h6 class="fw-bold mb-0" style="font-size: 0.8rem;">Siang</h6>
-                <small style="font-size: 0.65rem;">Belum Waktu</small>
+                <small style="font-size: 0.65rem;">Belum Waktunya</small>
               </div>
           </div>
           @elseif($jamSekarang > 15)
@@ -209,7 +206,7 @@
             <i class="bi bi-lock-fill fs-4 mb-0"></i>
             <div>
               <h6 class="fw-bold mb-0" style="font-size: 0.8rem;">Malam</h6>
-              <small style="font-size: 0.65rem;">Belum Waktu</small>
+              <small style="font-size: 0.65rem;">Belum Waktunya</small>
             </div>
         </div>
         @elseif($jamSekarang > 23)
