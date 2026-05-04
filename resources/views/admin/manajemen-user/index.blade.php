@@ -11,21 +11,23 @@
     }
 
   </style>
-  <div class="d-flex justify-content-between align-items-center mb-4">
+  <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-4 gap-3">
     <div>
       <h2 class="h4 fw-bold text-dark mb-0">Manajemen Pengguna</h2>
       <p class="text-muted small mb-0">Kelola akun staf medis dan data dasar pasien di dalam sistem.</p>
     </div>
-    <a href="{{ url('/manajemen-user/create') }}" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold" style="background-color: #6610f2; border-color: #6610f2;">
-      <i class="bi bi-person-plus-fill me-2"></i>Tambah User Baru
-    </a>
+    <div class="w-100 w-sm-auto">
+      <a href="{{ url('/manajemen-user/create') }}" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold w-100" style="background-color: #6610f2; border-color: #6610f2;">
+        <i class="bi bi-person-plus-fill me-2"></i>Tambah User Baru
+      </a>
+    </div>
   </div>
 
   <div class="card border-0 shadow-sm rounded-4 mb-4">
     <div class="card-body p-3">
       <form action="{{ route('manajemen-user.index') }}" method="GET" class="row g-2 align-items-center">
 
-        <div class="col-md-6">
+        <div class="col-12 col-md-6">
           <div class="input-group">
             <span class="input-group-text bg-transparent border-0 pe-0">
               <i class="bi bi-search text-muted"></i>
@@ -34,8 +36,8 @@
           </div>
         </div>
 
-        <div class="col-md-4">
-          <select name="role" class="form-select border-0 bg-light rounded-3 shadow-none small">
+        <div class="col-12 col-md-4">
+          <select name="role" class="form-select border-0 bg-light rounded-3 shadow-none small py-2">
             <option value="all" {{ request('role') == 'all' ? 'selected' : '' }}>Semua Role</option>
             <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
             <option value="dokter" {{ request('role') == 'dokter' ? 'selected' : '' }}>Dokter</option>
@@ -44,8 +46,8 @@
           </select>
         </div>
 
-        <div class="col-md-2">
-          <button type="submit" class="btn btn-dark w-100 rounded-3">Cari</button>
+        <div class="col-12 col-md-2">
+          <button type="submit" class="btn btn-dark w-100 rounded-3 py-2">Cari</button>
         </div>
 
       </form>
@@ -56,34 +58,34 @@
   <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
     <div class="table-responsive">
       @if (session('success'))
-      <div class="alert alert-success alert-dismissible fade show rounded-3 border-0 mb-4">
+      <div class="alert alert-success alert-dismissible fade show rounded-0 border-0 mb-0">
         <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
       </div>
       @endif
 
       @if (session('error'))
-      <div class="alert alert-danger alert-dismissible fade show rounded-3 border-0 mb-4">
+      <div class="alert alert-danger alert-dismissible fade show rounded-0 border-0 mb-0">
         <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ session('error') }}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
       </div>
       @endif
-      <table class="table align-middle mb-0">
+      <table class="table align-middle mb-0 text-nowrap">
         <thead class="bg-light">
           <tr>
-            <th class="ps-4 py-3 border-0 text-muted small text-uppercase">Pengguna</th>
+            <th class="ps-3 ps-md-4 py-3 border-0 text-muted small text-uppercase">Pengguna</th>
             <th class="border-0 text-muted small text-uppercase">Kontak</th>
             <th class="border-0 text-muted small text-uppercase">Role</th>
             <th class="border-0 text-muted small text-uppercase">Terdaftar</th>
             <th class="border-0 text-muted small text-uppercase">Info Spesifik</th>
             <th class="border-0 text-muted small text-uppercase">Login Terakhir</th>
-            <th class="border-0 text-muted small text-uppercase text-end pe-4">Aksi</th>
+            <th class="border-0 text-muted small text-uppercase text-end pe-3 pe-md-4">Aksi</th>
           </tr>
         </thead>
         <tbody>
           @forelse ($users as $user)
           <tr>
-            <td class="ps-4 py-3">
+            <td class="ps-3 ps-md-4 py-3">
               <div class="d-flex align-items-center">
                 <img src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=random&color=fff" class="rounded-circle me-3" width="40">
                 <div>
@@ -135,7 +137,7 @@
             <td class="small text-muted">
               {{ $user->last_login_at ? $user->last_login_at->diffForHumans() : 'Belum ada aktivitas login' }}
             </td>
-            <td class="text-start pe-4">
+            <td class="text-end pe-3 pe-md-4">
               <div class="d-flex justify-content-end gap-2">
                 <a href="{{ url('/manajemen-user/'.$user->id.'/edit') }}" class="btn btn-sm btn-light rounded-circle shadow-sm border" title="Edit Akun">
                   <i class="bi bi-pencil-square text-warning"></i>
@@ -155,10 +157,10 @@
                     <i class="bi bi-exclamation-octagon" style="font-size: 3rem;"></i>
                   </div>
                   <h5 class="fw-bold text-dark">Hapus Akun Pengguna?</h5>
-                  <p class="text-muted small">Tindakan ini akan menghapus akses pengguna <strong>{{ $user->name }}</strong> ke dalam sistem secara permanen. Data rekam medis atau resep yang terkait mungkin akan tetap tersimpan sebagai arsip.</p>
+                  <p class="text-muted small text-wrap">Tindakan ini akan menghapus akses pengguna <strong>{{ $user->name }}</strong> ke dalam sistem secara permanen. Data rekam medis atau resep yang terkait mungkin akan tetap tersimpan sebagai arsip.</p>
 
                   <div class="d-flex flex-column gap-2 align-items-center mt-4">
-                    <form action="{{ route('manajemen-user.destroy', $user->id) }}" method="POST" class="d-inline">
+                    <form action="{{ route('manajemen-user.destroy', $user->id) }}" method="POST" class="w-100">
                       @csrf
                       @method('DELETE')
                       <button type="submit" class="btn btn-danger rounded-pill w-100 fw-bold">
@@ -173,16 +175,18 @@
           </div>
           @empty
           <tr>
-            <td colspan="5" class="text-center py-4 text-muted">Belum ada data pengguna.</td>
+            <td colspan="7" class="text-center py-4 text-muted">Belum ada data pengguna.</td>
           </tr>
           @endforelse
         </tbody>
       </table>
     </div>
 
+    @if($users->hasPages())
     <div class="card-footer bg-white border-top-0 py-3">
       {{ $users->links('pagination::bootstrap-5') }}
     </div>
+    @endif
   </div>
 
 </x-app-layout>

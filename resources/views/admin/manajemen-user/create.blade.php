@@ -123,7 +123,7 @@
               <div class="col-md-7">
                 <div class="col-12">
                   <div class="d-flex justify-content-between pt-3 border-top">
-                    <div class="col-md-3">
+                    <div class="col-4 col-md-3">
                       <a href="{{ url('/manajemen-user') }}" class="btn btn-outline-secondary w-100 rounded-pill py-2 fw-medium">
                         Batal
                       </a>

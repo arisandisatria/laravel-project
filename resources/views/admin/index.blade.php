@@ -55,9 +55,9 @@
   </div>
 
   <div class="row g-4 mb-4">
-    <div class="col-sm-6 col-xl-3">
+    <div class="col-6 col-xl-3">
       <div class="card shadow-sm border-0 rounded-4 h-100">
-        <div class="card-body p-4">
+        <div class="card-body p-4 text-center text-sm-start">
           <div class="bg-indigo bg-opacity-10 rounded-3 p-3 text-center mb-3 d-inline-block" style="color: #6610f2; background-color: rgba(102, 16, 242, 0.1);">
             <i class="bi bi-person-badge fs-4"></i>
           </div>
@@ -67,9 +67,9 @@
       </div>
     </div>
 
-    <div class="col-sm-6 col-xl-3">
+    <div class="col-6 col-xl-3">
       <div class="card shadow-sm border-0 rounded-4 h-100">
-        <div class="card-body p-4">
+        <div class="card-body p-4 text-center text-sm-start">
           <div class="bg-primary bg-opacity-10 text-primary rounded-3 p-3 text-center mb-3 d-inline-block">
             <i class="bi bi-mortarboard fs-4"></i>
           </div>
@@ -79,9 +79,9 @@
       </div>
     </div>
 
-    <div class="col-sm-6 col-xl-3">
+    <div class="col-6 col-xl-3">
       <div class="card shadow-sm border-0 rounded-4 h-100">
-        <div class="card-body p-4">
+        <div class="card-body p-4 text-center text-sm-start">
           <div class="bg-success bg-opacity-10 text-success rounded-3 p-3 text-center mb-3 d-inline-block">
             <i class="bi bi-people fs-4"></i>
           </div>
@@ -91,7 +91,7 @@
       </div>
     </div>
 
-    <div class="col-sm-6 col-xl-3">
+    <div class="col-6 col-xl-3">
       <div class="card shadow-sm border-0 rounded-4 h-100 bg-light border-4">
         <div class="card-body p-4 text-center d-flex flex-column justify-content-center">
           <h6 class="text-muted fw-semibold mb-1 small">Total Akun Aktif</h6>
@@ -111,9 +111,9 @@
 
           <div class="d-flex flex-column gap-3">
             @forelse ($aktivitasLogin as $user)
-            <div class="d-flex justify-content-between align-items-center border-bottom pb-3">
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center border-bottom pb-3 gap-2">
               <div class="d-flex align-items-center">
-                <div class="rounded-circle text-white d-flex align-items-center justify-content-center me-3 fw-bold" style="width: 40px; height: 40px; background-color: #6610f2;">
+                <div class="rounded-circle text-white d-flex align-items-center justify-content-center me-3 fw-bold flex-shrink-0" style="width: 40px; height: 40px; background-color: #6610f2;">
                   {{ strtoupper(substr($user->name, 0, 2)) }}
                 </div>
                 <div>
@@ -121,7 +121,7 @@
                   <small class="text-muted" style="font-size: 0.75rem;">Melakukan login ke sistem</small>
                 </div>
               </div>
-              <span class="text-muted" style="font-size: 0.75rem;">{{ $user->last_login_at->diffForHumans() }}</span>
+              <span class="text-muted text-sm-end" style="font-size: 0.75rem;">{{ $user->last_login_at->diffForHumans() }}</span>
             </div>
             @empty
             <div class="text-center text-muted small py-3">
@@ -142,16 +142,16 @@
         <div class="card-body p-4">
           <div class="d-grid gap-3">
             <a href="{{ url('/manajemen-user/create') }}" class="btn btn-custom-indigo text-start p-3 rounded-4 d-flex align-items-center text-decoration-none transition-hover">
-              <div class="icon-box text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+              <div class="icon-box text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 40px; height: 40px;">
                 <i class="bi bi-person-plus"></i>
               </div>
               <div>
                 <h6 class="fw-bold mb-0">Tambah User Baru</h6>
-                <span class="small opacity-75">Input Dokter/Apoteker/Pasien</span>
+                <span class="small opacity-75 description-text">Input Dokter/Apoteker/Pasien</span>
               </div>
             </a>
             <a href="{{ route('admin.backup') }}" class="btn btn-outline-dark text-start p-3 rounded-4 d-flex align-items-center text-decoration-none border-dashed">
-              <div class="bg-dark text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="bi bi-database"></i></div>
+              <div class="bg-dark text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 40px; height: 40px;"><i class="bi bi-database"></i></div>
               <div>
                 <h6 class="fw-bold mb-0">Backup Database</h6>
                 <span class="small opacity-75">Ekspor data ke format .sql</span>
