@@ -11,15 +11,17 @@
     }
 
   </style>
-  <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-4 gap-3">
-    <div>
+  <div class="row justify-content-between align-items-center mb-4 g-3">
+    <div class="col-12 col-md-auto">
       <h2 class="h4 fw-bold text-dark mb-0">Manajemen Pengguna</h2>
       <p class="text-muted small mb-0">Kelola akun staf medis dan data dasar pasien di dalam sistem.</p>
     </div>
-    <div class="w-100 w-sm-auto">
-      <a href="{{ url('/manajemen-user/create') }}" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold w-100" style="background-color: #6610f2; border-color: #6610f2;">
-        <i class="bi bi-person-plus-fill me-2"></i>Tambah User Baru
-      </a>
+    <div class="col-12 col-md-auto">
+      <div class="d-grid d-md-block">
+        <a href="{{ url('/manajemen-user/create') }}" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold" style="background-color: #6610f2; border-color: #6610f2;">
+          <i class="bi bi-person-plus-fill me-2"></i>Tambah User Baru
+        </a>
+      </div>
     </div>
   </div>
 
