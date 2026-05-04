@@ -136,9 +136,9 @@
         <a href="{{ route('dashboard') }}" class="btn btn-primary px-3 px-md-4 shadow-sm rounded-pill fw-medium"><span class="d-none d-sm-inline">Ke</span> Dashboard</a>
         <form method="POST" action="{{ route('logout') }}" class="m-0 p-0">
           @csrf
-          <a href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();" class="btn btn-outline-danger px-3 px-md-4 rounded-pill fw-medium">
+          <button type="submit" class="btn btn-outline-danger px-3 px-md-4 rounded-pill fw-medium">
             Keluar
-          </a>
+          </button>
         </form>
         @endauth
       </div>
