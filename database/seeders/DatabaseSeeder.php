@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Dokter;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
@@ -25,11 +26,16 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
         ]);
 
-        User::create([
-            'name' => 'dr. Andi Hermawan',
-            'email' => 'dokter@obatku.com',
-            'password' => Hash::make('password'),
-            'role' => 'dokter',
+        $userDokter = User::create([
+        'name' => 'dr. Andi Hermawan',
+        'email' => 'dokter@obatku.com',
+        'password' => Hash::make('password'),
+        'role' => 'dokter',
+    ]);
+
+        Dokter::create([
+        'user_id' => $userDokter->id,
+        'poli' => 'Poli Umum',
         ]);
 
         User::create([
@@ -53,6 +59,6 @@ class DatabaseSeeder extends Seeder
             'jenis_kelamin' => 'Laki-laki',
         ]);
 
-        // Obat::factory(20)->create();
+        Obat::factory(20)->create();
     }
 }

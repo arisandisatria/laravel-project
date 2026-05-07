@@ -15,7 +15,7 @@ class DokterController extends Controller
 {
     public function index()
     {
-        $dokter = Dokter::where('user_id', Auth::id())->firstOrFail();
+        $dokter = Dokter::where('user_id', Auth::id())->first();
 
         $totalPasien = RekamMedis::where('dokter_id', $dokter->id)
                                  ->distinct('pasien_id')

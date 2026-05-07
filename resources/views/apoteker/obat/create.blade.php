@@ -30,16 +30,16 @@
             @csrf
 
             <div class="row g-4">
-              <div class="col-4 col-md-2">
+              <div class="col-6 col-md-2">
                 <label class="form-label small fw-bold text-muted">Kode Obat</label>
                 <input type="text" class="form-control border-0 bg-light rounded-3 py-2" name="kode_obat" placeholder="Contoh: OBT-001" required>
               </div>
-              <div class="col-8 col-md-10">
+              <div class="col-6 col-md-10">
                 <label class="form-label small fw-bold text-muted">Nama Obat</label>
                 <input type="text" class="form-control border-0 bg-light rounded-3 py-2" name="nama_obat" placeholder="Masukkan nama lengkap obat..." required>
               </div>
 
-              <div class="col-8 col-md-6">
+              <div class="col-6">
                 <label class="form-label small fw-bold text-muted">Kategori</label>
                 <select class="form-select border-0 bg-light rounded-3 py-2" name="kategori" required>
                   <option value="" selected disabled>Pilih Kategori</option>
@@ -50,7 +50,7 @@
                   <option value="Obat Luar">Obat Luar</option>
                 </select>
               </div>
-              <div class="col-4 col-md-6">
+              <div class="col-6">
                 <label class="form-label small fw-bold text-muted">Satuan</label>
                 <select class="form-select border-0 bg-light rounded-3 py-2" name="satuan" required>
                   <option value="" selected disabled>Pilih Satuan</option>
@@ -94,11 +94,11 @@
               <div class="col-12 mt-5">
                 <div class="d-flex justify-content-between">
                   <div class="col-4 col-md-2">
-                    <a href="{{ url('/stok-obat') }}" class="btn btn-outline-secondary w-100 rounded-pill py-2">
+                    <a href="{{ url('/stok-obat') }}" class="btn btn-light rounded-pill py-2 px-4 text-muted fw-medium text-center">
                       Batal
                     </a>
                   </div>
-                  <div class="col-md-6">
+                  <div class="col-8 col-md-6">
                     <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-bold shadow-sm">
                       Simpan Data Obat
                     </button>

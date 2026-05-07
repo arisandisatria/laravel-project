@@ -5,15 +5,18 @@
     }
 
   </style>
-
-  <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-4 gap-3">
-    <div>
+  <div class="row justify-content-between align-items-center mb-4 g-3">
+    <div class="col-12 col-md-auto">
       <h2 class="h4 fw-bold text-dark mb-0">Dokter Panel</h2>
       <p class="text-muted small mb-0">Pantau aktivitas medis dan resep pasien hari ini.</p>
     </div>
-    <span class="text-muted small bg-white px-3 py-2 rounded-pill shadow-sm border w-100 w-sm-auto text-center">
-      <i class="bi bi-calendar3 me-1"></i> {{ date('d F Y') }}
-    </span>
+    <div class="col-12 col-md-auto">
+      <div class="d-grid d-md-block">
+        <span class="text-muted small bg-white px-3 py-2 rounded-pill shadow-sm border w-100 w-sm-auto text-center">
+          <i class="bi bi-calendar3 me-1"></i> {{ date('d F Y') }}
+        </span>
+      </div>
+    </div>
   </div>
 
   <div class="card shadow-sm border-0 rounded-4 mb-4 bg-primary text-white overflow-hidden">
@@ -155,10 +158,10 @@
           <hr class="my-4 text-muted">
 
           <h6 class="fw-bold text-dark mb-3">Info Ketersediaan Obat</h6>
-          <div class="bg-info bg-opacity-10 p-3 rounded-3 mt-3">
+          <div class="bg-danger bg-opacity-10 p-3 rounded-3 mt-3">
             @forelse($obatKritis as $obat)
             <div class="small text-dark mb-2">
-              <i class="bi bi-info-circle-fill text-info me-1"></i>
+              <i class="bi bi-info-circle-fill text-danger me-1"></i>
               Stok <strong>{{ $obat->nama_obat }}</strong> tersisa {{ $obat->stok }} {{ $obat->satuan }}.
             </div>
             @empty

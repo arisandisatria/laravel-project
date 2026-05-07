@@ -91,13 +91,15 @@
                 </div>
               </div>
 
-              <div class="col-12 mt-4">
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-stretch align-items-md-center pt-3 border-top gap-2">
+              <div class="row g-3 mt-4">
+                <div class="col-4">
                   <a href="{{ url('/manajemen-pasien') }}" class="btn btn-light rounded-pill py-2 px-4 text-muted fw-medium text-center">
                     Batal
                   </a>
-                  <button type="submit" class="btn btn-primary px-5 rounded-pill py-2 fw-bold shadow-sm">
-                    Simpan Pemeriksaan <i class="bi bi-chevron-right ms-1"></i>
+                </div>
+                <div class="col-8">
+                  <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-bold shadow-sm">
+                    Simpan Pemeriksaan
                   </button>
                 </div>
               </div>

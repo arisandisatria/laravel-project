@@ -13,15 +13,17 @@
 
   </style>
 
-  <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-4 gap-3">
-    <div>
+  <div class="row justify-content-between align-items-center mb-4 g-3">
+    <div class="col-12 col-md-auto">
       <h2 class="h4 fw-bold text-dark mb-0">Inventaris Obat</h2>
       <p class="text-muted small mb-0">Kelola ketersediaan stok, harga, dan kategori obat apotek.</p>
     </div>
-    <div class="w-100 w-sm-auto">
-      <a href="{{ url('/stok-obat/create') }}" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold w-100">
-        <i class="bi bi-plus-lg me-2"></i>Tambah Obat Baru
-      </a>
+    <div class="col-12 col-md-auto">
+      <div class="d-grid d-md-block">
+        <a href="{{ url('/stok-obat/create') }}" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold w-100">
+          <i class="bi bi-plus-lg me-2"></i>Tambah Obat Baru
+        </a>
+      </div>
     </div>
   </div>
 

@@ -35,18 +35,18 @@
         @method('PUT')
 
         <div class="row g-4">
-          <div class="col-4 col-md-2">
+          <div class="col-6 col-md-2">
             <label class="form-label small fw-bold text-muted text-uppercase">Kode Obat</label>
             <input type="text" class="form-control border-0 bg-light rounded-3 py-2 fw-bold" name="kode_obat" value="{{ $item->kode_obat }}" readonly>
             <small class="text-info">*Kode obat tidak dapat diubah</small>
           </div>
 
-          <div class="col-8 col-md-10">
+          <div class="col-6 col-md-10">
             <label class="form-label small fw-bold text-muted text-uppercase">Nama Obat</label>
             <input type="text" class="form-control border-0 bg-light rounded-3 py-2" name="nama_obat" value="{{ $item->nama_obat }}" required>
           </div>
 
-          <div class="col-8 col-md-6">
+          <div class="col-6">
             <label class="form-label small fw-bold text-muted text-uppercase">Kategori</label>
             <select class="form-select border-0 bg-light rounded-3 py-2" name="kategori">
               <option value="Antibiotik" {{ old('kategori', $item->kategori) == 'Antibiotik' ? 'selected' : '' }}>Antibiotik</option>
@@ -57,7 +57,7 @@
             </select>
           </div>
 
-          <div class="col-4 col-md-6">
+          <div class="col-6">
             <label class="form-label small fw-bold text-muted text-uppercase">Satuan</label>
             <select class="form-select border-0 bg-light rounded-3 py-2" name="satuan">
               <option value="Tablet" {{ old('satuan', $item->satuan) == 'Tablet' ? 'selected' : '' }}>Tablet</option>
@@ -98,11 +98,11 @@
           <div class="col-12 mt-5">
             <div class="d-flex justify-content-between pt-3 border-top">
               <div class="col-4 col-md-2">
-                <a href="{{ url('/stok-obat') }}" class="btn btn-outline-secondary w-100 rounded-pill py-2">
+                <a href="{{ url('/stok-obat') }}" class="btn btn-light rounded-pill py-2 px-4 text-muted fw-medium text-center">
                   Batal
                 </a>
               </div>
-              <div class="col-md-6">
+              <div class="col-8 col-md-6">
                 <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-bold shadow-sm">
                   Simpan Perubahan
                 </button>

@@ -48,10 +48,13 @@ Ikuti langkah-langkah berikut untuk menjalankan **Obatku** di mesin lokal Anda:
    > git clone https://github.com/username/obatku.git
    > cd obatku
 
-2. **Install Dependensi PHP**
+2. **Install Dependensi Node**
+   > npm install
+
+3. **Install Dependensi PHP**
    > composer install
 
-3. **Konfigurasi Environment**
+4. **Konfigurasi Environment**
    Salin file konfigurasi bawaan dan sesuaikan dengan database Anda:
    > cp .env.example .env
    
@@ -63,14 +66,14 @@ Ikuti langkah-langkah berikut untuk menjalankan **Obatku** di mesin lokal Anda:
    > DB_USERNAME=root
    > DB_PASSWORD=
 
-4. **Generate Application Key**
+5. **Generate Application Key**
    > php artisan key:generate
 
-5. **Migrasi Database & Seeder**
+6. **Migrasi Database & Seeder**
    Jalankan perintah ini untuk membangun struktur tabel beserta data contoh (*dummy data*):
    > php artisan migrate --seed
 
-6. **Jalankan Server Lokal**
+7. **Jalankan Server Lokal**
    > php artisan serve
 
    Aplikasi kini dapat diakses melalui browser di: `http://127.0.0.1:8000`

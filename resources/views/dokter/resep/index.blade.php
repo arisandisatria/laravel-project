@@ -10,15 +10,17 @@
 
   </style>
 
-  <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-4 gap-3">
-    <div>
+  <div class="row justify-content-between align-items-center mb-4 g-3">
+    <div class="col-12 col-md-auto">
       <h2 class="h4 fw-bold text-dark mb-0">Kelola Resep</h2>
       <p class="text-muted small mb-0">Kelola dan pantau status resep yang telah Anda terbitkan.</p>
     </div>
-    <div class="d-grid d-sm-block w-100" style="max-width: 100%; sm:max-width: max-content;">
-      <a href="{{ url('/kelola-resep/create') }}" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold">
-        <i class="bi bi-plus-lg me-2"></i>Buat Resep Baru
-      </a>
+    <div class="col-12 col-md-auto">
+      <div class="d-grid d-md-block">
+        <a href="{{ url('/kelola-resep/create') }}" class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold">
+          <i class="bi bi-plus-lg me-2"></i>Buat Resep Baru
+        </a>
+      </div>
     </div>
   </div>
 
@@ -153,7 +155,7 @@
           <h6 class="fw-bold small mb-2 text-uppercase text-muted">Daftar Obat</h6>
           <ul class="list-group list-group-flush border rounded-3 mb-4">
             @foreach($rm->reseps as $resep)
-            <li class="list-group-item d-flex flex-column flex-sm-row justify-content-between align-items-start small p-3 gap-2">
+            <li class="list-group-item d-flex flex-row justify-content-between align-items-start small p-3 gap-2">
               <div>
                 <strong>{{ $resep->obat->nama_obat ?? 'Obat Dihapus' }}</strong>
                 <div class="text-muted">{{ $resep->aturan }}</div>
