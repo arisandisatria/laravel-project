@@ -9,11 +9,26 @@
           </div>
 
           <h5 class="fw-bold mb-1">{{ Auth::user()->name }}</h5>
-          <p class="text-muted small mb-3">{{ Auth::user()->email }}</p>
 
-          <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 text-capitalize">
+          <span class="badge bg-success bg-opacity-10 mt-2 text-success rounded-pill px-3 py-2 text-capitalize">
             Akun {{ Auth::user()->role }} Aktif
           </span>
+
+          <div class="d-flex align-items-center w-100 mt-3">
+            <div class="w-50 text-end pe-2 border-end border-secondary">
+              <p class="text-muted small mb-0">{{ Auth::user()->email }}</p>
+            </div>
+
+            <div class="w-50 text-start ps-2">
+              @if (Auth::user()->role == "pasien" && Auth::user()->pasien && Auth::user()->pasien->no_hp)
+              <p class="text-muted small mb-0">
+                <i class="bi bi-whatsapp text-success me-1"></i>{{ Auth::user()->pasien->no_hp }}
+              </p>
+              @else
+              <p class="text-muted small mb-0 fst-italic">-</p>
+              @endif
+            </div>
+          </div>
 
           <hr class="my-4 text-muted border-opacity-25">
 

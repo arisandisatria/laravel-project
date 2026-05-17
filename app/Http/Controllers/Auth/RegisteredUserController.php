@@ -37,6 +37,7 @@ class RegisteredUserController extends Controller
         'email' => 'required|string|email|max:255|unique:users',
         'password' => 'required|string|min:8|confirmed',
         'nik' => 'required|string|size:16|unique:pasiens,nik',
+        'no_hp' => 'required|string|min:10|max:20',
         'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
         'tanggal_lahir' => 'required|date',
     ]);
@@ -53,6 +54,7 @@ class RegisteredUserController extends Controller
         Pasien::create([
             'user_id' => $user->id,
             'nik' => $request->nik,
+            'no_hp' => $request->no_hp,
             'jenis_kelamin' => $request->jenis_kelamin,
             'tanggal_lahir' => $request->tanggal_lahir,
         ]);

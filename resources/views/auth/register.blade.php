@@ -116,6 +116,14 @@
         </div>
       </div>
 
+      <div class="row g-3 mb-3">
+        <div class="col-12">
+          <div class="form-floating">
+            <input id="no_hp" type="text" class="form-control bg-light border-light-subtle fw-medium text-dark" style="border-radius: 12px;" name="no_hp" required placeholder="081234567890">
+            <label for="no_hp" class="text-muted small"><i class="bi bi-whatsapp me-2"></i>Nomor WhatsApp Aktif</label>
+          </div>
+        </div>
+      </div>
       <div class="row g-3 mb-4">
         <div class="col-md-6">
           <div class="form-floating">

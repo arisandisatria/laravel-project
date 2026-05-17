@@ -124,14 +124,19 @@
                 @forelse($jadwalPagi as $resep)
                 @php
                 $sudah = $logHariIni->where('resep_id', $resep->id)->where('waktu', 'Pagi')->isNotEmpty();
+
+                $disetujuiHariIni = $resep->updated_at->isToday();
+                $jamDisetujui = $resep->updated_at->format('H');
                 @endphp
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-2 pb-2 gap-2 {{ !$loop->last ? 'border-bottom' : '' }}">
+                <div class="d-flex flex-row justify-content-between align-items-center gap-2 {{ !$loop->last ? 'border-bottom' : '' }}">
                   <div>
                     <h6 class="fw-bold mb-1 text-wrap">{{ optional($resep->obat)->nama_obat }}</h6>
                     <p class="small text-muted mb-0">{{ $resep->jumlah }} {{ optional($resep->obat)->satuan }} • {{ $resep->aturan }}</p>
                   </div>
                   @if($sudah)
                   <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2"><i class="bi bi-check-circle me-1"></i> Sudah Diminum</span>
+                  @elseif($disetujuiHariIni && $jamDisetujui >= 10)
+                  <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill px-3 py-2"><i class="bi bi-arrow-right-circle me-1"></i> Mulai Besok</span>
                   @elseif($jamSekarang > 10)
                   <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3 py-2"><i class="bi bi-x-circle me-1"></i> Terlewati</span>
                   @elseif($jamSekarang >= 6 && $jamSekarang <= 10) <span class="badge bg-primary text-white rounded-pill px-3 py-2 shadow-sm pulse-alert d-inline-block"><i class="bi bi-capsule me-1"></i> Waktunya Minum Obat</span>
@@ -155,14 +160,19 @@
                 @forelse($jadwalSiang as $resep)
                 @php
                 $sudah = $logHariIni->where('resep_id', $resep->id)->where('waktu', 'Siang')->isNotEmpty();
+
+                $disetujuiHariIni = $resep->updated_at->isToday();
+                $jamDisetujui = $resep->updated_at->format('H');
                 @endphp
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-2 pb-2 gap-2 {{ !$loop->last ? 'border-bottom' : '' }}">
+                <div class="d-flex flex-row justify-content-between align-items-center gap-2 {{ !$loop->last ? 'border-bottom' : '' }}">
                   <div>
                     <h6 class="fw-bold mb-1 text-wrap">{{ optional($resep->obat)->nama_obat }}</h6>
                     <p class="small text-muted mb-0">{{ $resep->jumlah }} {{ optional($resep->obat)->satuan }} • {{ $resep->aturan }}</p>
                   </div>
                   @if($sudah)
                   <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2"><i class="bi bi-check-circle me-1"></i> Sudah Diminum</span>
+                  @elseif($disetujuiHariIni && $jamDisetujui >= 15)
+                  <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill px-3 py-2"><i class="bi bi-arrow-right-circle me-1"></i> Mulai Besok</span>
                   @elseif($jamSekarang > 15)
                   <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3 py-2"><i class="bi bi-x-circle me-1"></i> Terlewati</span>
                   @elseif($jamSekarang >= 11 && $jamSekarang <= 15) <span class="badge bg-primary text-white rounded-pill px-3 py-2 shadow-sm pulse-alert d-inline-block"><i class="bi bi-capsule me-1"></i> Waktunya Minum Obat</span>
@@ -186,16 +196,19 @@
                 @forelse($jadwalMalam as $resep)
                 @php
                 $sudah = $logHariIni->where('resep_id', $resep->id)->where('waktu', 'Malam')->isNotEmpty();
+
+                $disetujuiHariIni = $resep->updated_at->isToday();
+                $jamDisetujui = $resep->updated_at->format('H');
                 @endphp
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-2 pb-2 gap-2 {{ !$loop->last ? 'border-bottom' : '' }}">
+                <div class="d-flex flex-row justify-content-between align-items-center gap-2 {{ !$loop->last ? 'border-bottom' : '' }}">
                   <div>
                     <h6 class="fw-bold mb-1 text-wrap">{{ optional($resep->obat)->nama_obat }}</h6>
                     <p class="small text-muted mb-0">{{ $resep->jumlah }} {{ optional($resep->obat)->satuan }} • {{ $resep->aturan }}</p>
                   </div>
                   @if($sudah)
                   <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2"><i class="bi bi-check-circle me-1"></i> Sudah Diminum</span>
-                  @elseif($jamSekarang > 23)
-                  <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3 py-2"><i class="bi bi-x-circle me-1"></i> Terlewati</span>
+                  @elseif($disetujuiHariIni && $jamDisetujui >= 23)
+                  <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill px-3 py-2"><i class="bi bi-arrow-right-circle me-1"></i> Mulai Besok</span>
                   @elseif($jamSekarang >= 18 && $jamSekarang <= 23) <span class="badge bg-primary text-white rounded-pill px-3 py-2 shadow-sm pulse-alert d-inline-block"><i class="bi bi-capsule me-1"></i> Waktunya Minum Obat</span>
                     @else
                     <span class="text-muted small"><i class="bi bi-clock me-1"></i> Belum Waktunya</span>

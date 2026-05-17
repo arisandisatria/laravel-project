@@ -63,6 +63,10 @@
       $sisaHari = max(0, $durasiHari - $hariKe);
 
       $jamSekarang = \Carbon\Carbon::now()->hour;
+
+      $waktuPersetujuan = \Carbon\Carbon::parse($resep->updated_at);
+      $disetujuiHariIni = $waktuPersetujuan->isToday();
+      $jamDisetujui = $waktuPersetujuan->hour;
       @endphp
 
       <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
@@ -115,6 +119,14 @@
                   <small style="font-size: 0.65rem;">Belum Waktunya</small>
                 </div>
             </div>
+            @elseif($disetujuiHariIni && $jamDisetujui >= 10)
+            <div class="border border-secondary bg-light text-secondary rounded-4 px-1 py-2 p-md-3 h-100 d-flex flex-column justify-content-center align-items-center text-center gap-1" style="opacity: 0.8;">
+              <i class="bi bi-arrow-right-circle fs-4 mb-0"></i>
+              <div>
+                <h6 class="fw-bold mb-0" style="font-size: 0.8rem;">Pagi</h6>
+                <small style="font-size: 0.65rem;">Mulai Besok</small>
+              </div>
+            </div>
             @elseif($jamSekarang > 10)
             <form action="{{ route('pasien.jadwal.tandai') }}" method="POST" class="h-100">
               @csrf
@@ -162,6 +174,14 @@
                 <small style="font-size: 0.65rem;">Belum Waktunya</small>
               </div>
           </div>
+          @elseif($disetujuiHariIni && $jamDisetujui >= 15)
+          <div class="border border-secondary bg-light text-secondary rounded-4 px-1 py-2 p-md-3 h-100 d-flex flex-column justify-content-center align-items-center text-center gap-1" style="opacity: 0.8;">
+            <i class="bi bi-arrow-right-circle fs-4 mb-0"></i>
+            <div>
+              <h6 class="fw-bold mb-0" style="font-size: 0.8rem;">Siang</h6>
+              <small style="font-size: 0.65rem;">Mulai Besok</small>
+            </div>
+          </div>
           @elseif($jamSekarang > 15)
           <form action="{{ route('pasien.jadwal.tandai') }}" method="POST" class="h-100">
             @csrf
@@ -208,6 +228,14 @@
               <h6 class="fw-bold mb-0" style="font-size: 0.8rem;">Malam</h6>
               <small style="font-size: 0.65rem;">Belum Waktunya</small>
             </div>
+        </div>
+        @elseif($disetujuiHariIni && $jamDisetujui >= 23)
+        <div class="border border-secondary bg-light text-secondary rounded-4 px-1 py-2 p-md-3 h-100 d-flex flex-column justify-content-center align-items-center text-center gap-1" style="opacity: 0.8;">
+          <i class="bi bi-arrow-right-circle fs-4 mb-0"></i>
+          <div>
+            <h6 class="fw-bold mb-0" style="font-size: 0.8rem;">Malam</h6>
+            <small style="font-size: 0.65rem;">Mulai Besok</small>
+          </div>
         </div>
         @elseif($jamSekarang > 23)
         <form action="{{ route('pasien.jadwal.tandai') }}" method="POST" class="h-100">

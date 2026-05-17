@@ -10,7 +10,7 @@ class Pasien extends Model
     /** @use HasFactory<\Database\Factories\PasienFactory> */
     use HasFactory;
 
-    protected $fillable = ['user_id', 'nik', 'tanggal_lahir', 'jenis_kelamin'];
+    protected $fillable = ['user_id', 'nik', 'no_hp', 'tanggal_lahir', 'jenis_kelamin'];
 
     public function user() {
         return $this->belongsTo(User::class);

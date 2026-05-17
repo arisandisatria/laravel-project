@@ -32,7 +32,18 @@ class ProfileController extends Controller
             $request->user()->email_verified_at = null;
         }
 
+
         $request->user()->save();
+
+        if ($request->user()->role == 'pasien' && $request->user()->pasien) {
+            $request->validate([
+                'no_hp' => 'required|string|min:10|max:20',
+            ]);
+
+            $request->user()->pasien->update([
+                'no_hp' => $request->no_hp,
+            ]);
+        }
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

@@ -16,10 +16,16 @@ class PasienController extends Controller
     {
         $pasien = Pasien::where('user_id', Auth::id())->firstOrFail();
 
-        $rmTerakhir = RekamMedis::with(['dokter.user', 'reseps.obat'])
+        // Tambahkan filter 7 hari di sini agar data lama tidak bocor ke dashboard
+        $rmTerakhir = RekamMedis::with(['dokter.user', 'reseps' => function($query) {
+                            // Pastikan relasi resep yang dipanggil juga dibatasi 7 hari
+                            $query->whereDate('created_at', '>=', Carbon::today()->subDays(7));
+                        }, 'reseps.obat'])
                         ->where('pasien_id', $pasien->id)
                         ->whereHas('reseps', function($q) {
-                            $q->whereIn('status', ['Disiapkan', 'Selesai']);
+                            // Pastikan rekam medis ini memiliki resep dalam 7 hari terakhir
+                            $q->whereIn('status', ['Disiapkan', 'Selesai'])
+                              ->whereDate('created_at', '>=', Carbon::today()->subDays(7));
                         })
                         ->latest()
                         ->first();

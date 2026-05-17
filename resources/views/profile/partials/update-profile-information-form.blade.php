@@ -46,6 +46,16 @@
       @endif
     </div>
 
+    @if ($user->role == 'pasien' && $user->pasien)
+    <div class="mb-3">
+      <label for="no_hp" class="form-label fw-semibold">{{ __('Nomor WhatsApp') }}</label>
+      <input id="no_hp" name="no_hp" type="text" class="form-control @error('no_hp') is-invalid @enderror" value="{{ old('no_hp', $user->pasien->no_hp) }}" required autocomplete="tel">
+      @error('no_hp')
+      <div class="invalid-feedback">{{ $message }}</div>
+      @enderror
+    </div>
+    @endif
+
     <div class="d-flex align-items-center gap-3 mt-4">
       <button type="submit" class="btn btn-primary px-4">{{ __('Simpan') }}</button>
 
